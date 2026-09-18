@@ -339,7 +339,7 @@
   }
 
   /* ---------- PREFECTURE MAP QUIZ ---------- */
-  .pref-map-wrap{ flex:1; display:flex; align-items:center; justify-content:center; }
+  .pref-map-wrap{ display:flex; align-items:center; justify-content:center; margin-bottom:12px; }
   .pref-map-wrap svg{ width:100%; height:auto; max-height:100%; }
   .pref-map-wrap .prefecture{ cursor:pointer; transition:fill .15s ease; }
   .pref-map-wrap.answered .prefecture{ cursor:default; pointer-events:none; }
@@ -480,6 +480,11 @@
       <div class="logo-card" id="revLogoCard" style="display:none;">
         <img id="revLogoImg" src="" alt="ロゴ">
       </div>
+      <p class="feedback-loc" id="revLoc" style="display:none; justify-content:center;"><span class="material-icons">place</span><span id="revLocText"></span></p>
+      <div class="origin-box" id="revOriginBox" style="display:none;">
+        <div class="label">校章・ロゴの由来</div>
+        <p id="revOriginText"></p>
+      </div>
       <div style="margin-top:auto; display:flex; flex-direction:column; gap:10px;">
         <button class="btn-primary" id="revRevealBtn">ロゴを表示する</button>
         <button class="btn-primary" id="revNextBtn" style="display:none;">次へ</button>
@@ -509,8 +514,14 @@
 
     <div class="pref-map-wrap" id="pqMapWrap"></div>
 
-    <div id="pqFeedback" style="display:none; text-align:center; margin-top:10px;">
-      <p class="feedback-answer" id="pqFeedbackText" style="margin-bottom:12px;"></p>
+    <div id="pqFeedback" style="display:none;">
+      <div class="feedback-badge" id="pqFeedbackBadge"></div>
+      <p class="feedback-answer" id="pqFeedbackAnswer"></p>
+      <p class="feedback-loc" id="pqFeedbackLoc"><span class="material-icons">place</span><span id="pqFeedbackLocText"></span></p>
+      <div class="origin-box">
+        <div class="label">校章・ロゴの由来</div>
+        <p id="pqOriginText"></p>
+      </div>
       <button class="btn-primary" id="pqNextBtn">次へ</button>
     </div>
   </section>
@@ -802,6 +813,10 @@ const els = {
   revNameCard: document.getElementById('revNameCard'),
   revLogoCard: document.getElementById('revLogoCard'),
   revLogoImg: document.getElementById('revLogoImg'),
+  revLoc: document.getElementById('revLoc'),
+  revLocText: document.getElementById('revLocText'),
+  revOriginBox: document.getElementById('revOriginBox'),
+  revOriginText: document.getElementById('revOriginText'),
   revRevealBtn: document.getElementById('revRevealBtn'),
   revNextBtn: document.getElementById('revNextBtn'),
   revRetryBtn: document.getElementById('revRetryBtn'),
@@ -813,7 +828,10 @@ const els = {
   pqLogoImg: document.getElementById('pqLogoImg'),
   pqMapWrap: document.getElementById('pqMapWrap'),
   pqFeedback: document.getElementById('pqFeedback'),
-  pqFeedbackText: document.getElementById('pqFeedbackText'),
+  pqFeedbackBadge: document.getElementById('pqFeedbackBadge'),
+  pqFeedbackAnswer: document.getElementById('pqFeedbackAnswer'),
+  pqFeedbackLocText: document.getElementById('pqFeedbackLocText'),
+  pqOriginText: document.getElementById('pqOriginText'),
   pqNextBtn: document.getElementById('pqNextBtn'),
   progText: document.getElementById('progText'),
   scoreText: document.getElementById('scoreText'),
@@ -1044,9 +1062,11 @@ function onPrefTap(key, el){
 
   els.pqScoreText.textContent = `正解 ${score}`;
   els.pqProgFill.style.width = ((current+1)/order.length*100) + '%';
-  els.pqFeedbackText.textContent = isCorrect
-    ? `○ 正解！ ${DATA[idx].name}（${DATA[idx].loc}）`
-    : `✕ 不正解。正解は ${DATA[idx].name}（${DATA[idx].loc}）`;
+  els.pqFeedbackBadge.className = 'feedback-badge ' + (isCorrect ? 'correct' : 'wrong');
+  els.pqFeedbackBadge.textContent = isCorrect ? '○ 正解！' : '✕ 不正解';
+  els.pqFeedbackAnswer.textContent = DATA[idx].name;
+  els.pqFeedbackLocText.textContent = DATA[idx].loc || '';
+  els.pqOriginText.textContent = DATA[idx].origin || '';
   els.pqFeedback.style.display = 'block';
   els.pqNextBtn.textContent = (current+1 < order.length) ? '次へ' : '結果を見る';
 }
@@ -1208,6 +1228,8 @@ function loadReverseCard(){
   els.revNameCard.textContent = DATA[idx].name;
   els.revLogoImg.src = DATA[idx].img;
   els.revLogoCard.style.display = 'none';
+  els.revLoc.style.display = 'none';
+  els.revOriginBox.style.display = 'none';
   els.revRevealBtn.style.display = '';
   els.revNextBtn.style.display = 'none';
   els.revProgText.textContent = `${revCurrent+1} / ${revOrder.length}`;
@@ -1215,7 +1237,12 @@ function loadReverseCard(){
 }
 
 function revealReverseLogo(){
+  const idx = revOrder[revCurrent];
   els.revLogoCard.style.display = 'flex';
+  els.revLocText.textContent = DATA[idx].loc || '';
+  els.revLoc.style.display = 'flex';
+  els.revOriginText.textContent = DATA[idx].origin || '';
+  els.revOriginBox.style.display = 'block';
   els.revRevealBtn.style.display = 'none';
   els.revNextBtn.style.display = '';
   els.revProgFill.style.width = ((revCurrent+1)/revOrder.length*100) + '%';
