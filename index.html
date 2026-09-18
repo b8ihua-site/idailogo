@@ -56,7 +56,7 @@
     font-family:"WDXL Lubrifont JP N", sans-serif;
     font-weight:400;
     font-size:22px;
-    letter-spacing:.05em;
+    letter-spacing:.01em;
     color:#0067AD;
   }
   .back-icon{
@@ -64,7 +64,7 @@
     margin-right:0;
     background:transparent; border:none; padding:0;
     display:flex; align-items:center; justify-content:center;
-    color:#007765; cursor:pointer;
+    color:#0067AD; cursor:pointer;
     transition: width .28s ease, opacity .22s ease, margin-right .28s ease;
     flex-shrink:0;
   }
@@ -85,7 +85,7 @@
   /* ---------- HOME ---------- */
   #home{ gap:0; }
   .mosaic-wrap{
-    margin: 0px -18px 24px;
+    margin: 4px -18px 24px;
     overflow:hidden;
   }
   .mosaic-grid{
@@ -107,14 +107,9 @@
     display:flex; align-items:center; justify-content:center;
     transition: transform .6s cubic-bezier(.4,0,.2,1);
     will-change:transform;
+    background:#fff; padding:10%;
   }
-  .mosaic-inner.is-logo{ background:#fff; padding:10%; }
-  .mosaic-inner.is-logo img{ width:100%; height:100%; object-fit:contain; }
-  .mosaic-inner.is-name{
-    background:#111; color:#fff;
-    font-size:9.5px; font-weight:700; line-height:1.35;
-    text-align:center; padding:8%;
-  }
+  .mosaic-inner img{ width:100%; height:100%; object-fit:contain; }
   .home-desc{
     font-size:14px; line-height:1.8; color:var(--ink-soft);
     margin:2px 0 24px; text-align:left;
@@ -163,8 +158,8 @@
   }
   input[type="range"]::-webkit-slider-thumb{
     -webkit-appearance:none; appearance:none;
-    width:18px; height:18px; border-radius:50%;
-    background:#fff; border:2px solid var(--ink); cursor:pointer;
+    width:22px; height:22px; border-radius:50%;
+    background:#fff; border:3px solid var(--ink); cursor:pointer;
   }
   input[type="range"]::-moz-range-thumb{
     width:16px; height:16px; border-radius:50%;
@@ -706,17 +701,24 @@ const mosaicGridEl = document.getElementById('mosaicGrid');
 const mosaicCells = [];
 
 function randDataIndex(){ return Math.floor(Math.random() * DATA.length); }
-function randDir(){
-  const dirs = [
-    {x:'-100%', y:'0'}, {x:'100%', y:'0'},
-    {x:'0', y:'-100%'}, {x:'0', y:'100%'}
-  ];
-  return dirs[Math.floor(Math.random()*dirs.length)];
-}
-function dirTransform(d){ return `translate(${d.x}, ${d.y})`; }
 
-function renderCellContent(cs){
-  cs.el.innerHTML = `<img src="${DATA[cs.idx].img}" alt="">`;
+function randDataIndex(){ return Math.floor(Math.random() * DATA.length); }
+function randAxisDir(){
+  // exit direction for current layer; entry for next layer is the opposite side, same axis
+  const opts = [
+    {axis:'X', exit:'-100%', enter:'100%'},
+    {axis:'X', exit:'100%', enter:'-100%'},
+    {axis:'Y', exit:'-100%', enter:'100%'},
+    {axis:'Y', exit:'100%', enter:'-100%'}
+  ];
+  return opts[Math.floor(Math.random()*opts.length)];
+}
+function axisTransform(axis, val){
+  return axis === 'X' ? `translate(${val}, 0)` : `translate(0, ${val})`;
+}
+
+function setLayerImg(el, idx){
+  el.innerHTML = `<img src="${DATA[idx].img}" alt="">`;
 }
 
 function buildMosaic(){
@@ -724,37 +726,52 @@ function buildMosaic(){
   for(let i=0;i<MOSAIC_COUNT;i++){
     const cell = document.createElement('div');
     cell.className = 'mosaic-cell';
-    const inner = document.createElement('div');
-    inner.className = 'mosaic-inner is-logo';
-    cell.appendChild(inner);
+    const layerA = document.createElement('div');
+    layerA.className = 'mosaic-inner';
+    const layerB = document.createElement('div');
+    layerB.className = 'mosaic-inner';
+    cell.appendChild(layerA);
+    cell.appendChild(layerB);
     mosaicGridEl.appendChild(cell);
-    const cs = { el: inner, idx: randDataIndex(), animating:false };
-    renderCellContent(cs);
-    mosaicCells.push(cs);
+
+    const idx = randDataIndex();
+    layerA.style.transition = 'none';
+    layerA.style.transform = 'translate(0,0)';
+    setLayerImg(layerA, idx);
+    layerB.style.transition = 'none';
+    layerB.style.transform = 'translate(100%,0)';
+
+    mosaicCells.push({ elA: layerA, elB: layerB, activeIsA: true, idx, animating:false });
   }
 }
 buildMosaic();
 
 function animateCell(cs){
   cs.animating = true;
-  const dOut = randDir();
-  cs.el.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1)';
-  cs.el.style.transform = dirTransform(dOut);
+  const curEl = cs.activeIsA ? cs.elA : cs.elB;
+  const nextEl = cs.activeIsA ? cs.elB : cs.elA;
+  const dir = randAxisDir();
+
+  let nextIdx;
+  do { nextIdx = randDataIndex(); } while(nextIdx === cs.idx);
+  setLayerImg(nextEl, nextIdx);
+
+  nextEl.style.transition = 'none';
+  nextEl.style.transform = axisTransform(dir.axis, dir.enter);
+  void nextEl.offsetWidth;
+
+  requestAnimationFrame(()=>{
+    curEl.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1)';
+    nextEl.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1)';
+    curEl.style.transform = axisTransform(dir.axis, dir.exit);
+    nextEl.style.transform = 'translate(0,0)';
+  });
+
   setTimeout(()=>{
-    let next;
-    do { next = randDataIndex(); } while(next === cs.idx);
-    cs.idx = next;
-    renderCellContent(cs);
-    const dIn = randDir();
-    cs.el.style.transition = 'none';
-    cs.el.style.transform = dirTransform(dIn);
-    void cs.el.offsetWidth;
-    requestAnimationFrame(()=>{
-      cs.el.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1)';
-      cs.el.style.transform = 'translate(0,0)';
-    });
-    setTimeout(()=>{ cs.animating = false; }, 620);
-  }, 600);
+    cs.idx = nextIdx;
+    cs.activeIsA = !cs.activeIsA;
+    cs.animating = false;
+  }, 640);
 }
 
 setInterval(()=>{
