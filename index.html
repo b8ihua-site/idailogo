@@ -55,9 +55,9 @@
   .app-header-title{
     font-family:"WDXL Lubrifont JP N", sans-serif;
     font-weight:400;
-    font-size:19px;
-    letter-spacing:.01em;
-    color:#007765;
+    font-size:22px;
+    letter-spacing:.05em;
+    color:#0067AD;
   }
   .back-icon{
     width:0; opacity:0; overflow:hidden;
@@ -84,6 +84,37 @@
 
   /* ---------- HOME ---------- */
   #home{ gap:0; }
+  .mosaic-wrap{
+    margin: 0px -18px 24px;
+    overflow:hidden;
+  }
+  .mosaic-grid{
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap:4px;
+    width:114%;
+    margin-left:-7%;
+  }
+  .mosaic-cell{
+    position:relative;
+    aspect-ratio:1/1;
+    overflow:hidden;
+    background:#fff;
+    border:1px solid #EDEDED;
+  }
+  .mosaic-inner{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    transition: transform .6s cubic-bezier(.4,0,.2,1);
+    will-change:transform;
+  }
+  .mosaic-inner.is-logo{ background:#fff; padding:10%; }
+  .mosaic-inner.is-logo img{ width:100%; height:100%; object-fit:contain; }
+  .mosaic-inner.is-name{
+    background:#111; color:#fff;
+    font-size:9.5px; font-weight:700; line-height:1.35;
+    text-align:center; padding:8%;
+  }
   .home-desc{
     font-size:14px; line-height:1.8; color:var(--ink-soft);
     margin:2px 0 24px; text-align:left;
@@ -132,8 +163,8 @@
   }
   input[type="range"]::-webkit-slider-thumb{
     -webkit-appearance:none; appearance:none;
-    width:22px; height:22px; border-radius:50%;
-    background:#fff; border:3px solid var(--ink); cursor:pointer;
+    width:18px; height:18px; border-radius:50%;
+    background:#fff; border:2px solid var(--ink); cursor:pointer;
   }
   input[type="range"]::-moz-range-thumb{
     width:16px; height:16px; border-radius:50%;
@@ -329,6 +360,7 @@
 
   <!-- HOME -->
   <section id="home" class="screen active">
+    <div class="mosaic-wrap"><div class="mosaic-grid" id="mosaicGrid"></div></div>
     <p class="home-desc">国公立・私立・防衛医科大学校まで、全82校の校章とロゴマークを収録。カテゴリと出題数を選んで、クイズに挑戦するか、由来をじっくり学べます。</p>
 
     <div class="cat-label">対象を選ぶ</div>
@@ -668,7 +700,70 @@ function closeModal(){
   els.modalOverlay.classList.remove('active');
 }
 
-/* ---------- EVENTS ---------- */
+/* ---------- HOME MOSAIC ---------- */
+const MOSAIC_COLS = 5, MOSAIC_ROWS = 3, MOSAIC_COUNT = MOSAIC_COLS * MOSAIC_ROWS;
+const mosaicGridEl = document.getElementById('mosaicGrid');
+const mosaicCells = [];
+
+function randDataIndex(){ return Math.floor(Math.random() * DATA.length); }
+function randDir(){
+  const dirs = [
+    {x:'-100%', y:'0'}, {x:'100%', y:'0'},
+    {x:'0', y:'-100%'}, {x:'0', y:'100%'}
+  ];
+  return dirs[Math.floor(Math.random()*dirs.length)];
+}
+function dirTransform(d){ return `translate(${d.x}, ${d.y})`; }
+
+function renderCellContent(cs){
+  cs.el.innerHTML = `<img src="${DATA[cs.idx].img}" alt="">`;
+}
+
+function buildMosaic(){
+  mosaicGridEl.innerHTML = '';
+  for(let i=0;i<MOSAIC_COUNT;i++){
+    const cell = document.createElement('div');
+    cell.className = 'mosaic-cell';
+    const inner = document.createElement('div');
+    inner.className = 'mosaic-inner is-logo';
+    cell.appendChild(inner);
+    mosaicGridEl.appendChild(cell);
+    const cs = { el: inner, idx: randDataIndex(), animating:false };
+    renderCellContent(cs);
+    mosaicCells.push(cs);
+  }
+}
+buildMosaic();
+
+function animateCell(cs){
+  cs.animating = true;
+  const dOut = randDir();
+  cs.el.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1)';
+  cs.el.style.transform = dirTransform(dOut);
+  setTimeout(()=>{
+    let next;
+    do { next = randDataIndex(); } while(next === cs.idx);
+    cs.idx = next;
+    renderCellContent(cs);
+    const dIn = randDir();
+    cs.el.style.transition = 'none';
+    cs.el.style.transform = dirTransform(dIn);
+    void cs.el.offsetWidth;
+    requestAnimationFrame(()=>{
+      cs.el.style.transition = 'transform .6s cubic-bezier(.4,0,.2,1)';
+      cs.el.style.transform = 'translate(0,0)';
+    });
+    setTimeout(()=>{ cs.animating = false; }, 620);
+  }, 600);
+}
+
+setInterval(()=>{
+  mosaicCells.forEach(cs=>{
+    if(!cs.animating && Math.random() < 0.5) animateCell(cs);
+  });
+}, 2400);
+
+
 els.headerHomeBtn.addEventListener('click', ()=> showScreen('home'));
 els.startBtn.addEventListener('click', startQuiz);
 els.studyBtn.addEventListener('click', openStudy);
