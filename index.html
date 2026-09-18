@@ -47,13 +47,11 @@
   /* ---------- APP HEADER (persistent) ---------- */
   .app-header{
     position:sticky; top:0; z-index:30;
-    display:none;
-    align-items:center; justify-content:space-between;
-    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    padding:16px 18px;
     background:#fff;
-    border-bottom:1px solid var(--line);
   }
-  .app-header.visible{ display:flex; }
   .app-header-title{
     font-family:"WDXL Lubrifont JP N", sans-serif;
     font-weight:400;
@@ -61,6 +59,19 @@
     letter-spacing:.01em;
     color:#007765;
   }
+  .back-icon{
+    width:0; opacity:0; overflow:hidden;
+    margin-right:0;
+    background:transparent; border:none; padding:0;
+    display:flex; align-items:center; justify-content:center;
+    color:#007765; cursor:pointer;
+    transition: width .28s ease, opacity .22s ease, margin-right .28s ease;
+    flex-shrink:0;
+  }
+  .app-header.show-back .back-icon{
+    width:24px; opacity:1; margin-right:6px;
+  }
+  .back-icon .material-icons{ font-size:26px; }
   .icon-btn{
     width:36px; height:36px; border-radius:8px; border:1.5px solid var(--line);
     background:#fff; display:flex; align-items:center; justify-content:center;
@@ -312,7 +323,7 @@
 <div id="app">
 
   <div class="app-header" id="appHeader">
-    <button class="icon-btn" id="headerHomeBtn"><span class="material-icons">chevron_left</span></button>
+    <button class="back-icon" id="headerHomeBtn"><span class="material-icons">chevron_left</span></button>
     <span class="app-header-title">医大のロゴを学ぼう</span>
   </div>
 
@@ -485,9 +496,9 @@ function showScreen(name){
   [els.home, els.quiz, els.result, els.study].forEach(s => s.classList.remove('active'));
   els[name].classList.add('active');
   if(name === 'home'){
-    els.appHeader.classList.remove('visible');
+    els.appHeader.classList.remove('show-back');
   } else {
-    els.appHeader.classList.add('visible');
+    els.appHeader.classList.add('show-back');
   }
 }
 
