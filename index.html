@@ -3,105 +3,158 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>医学部ロゴ図鑑クイズ</title>
+<title>医大のロゴを学ぼう</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&family=WDXL+Lubrifont+JP+N&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
   :root{
-    --paper:#F6F2E7;
-    --paper-deep:#EFE9D8;
-    --ink:#232722;
-    --ink-soft:#5B6058;
-    --line:#D9D0BA;
-    --teal:#215951;
-    --teal-deep:#163d38;
-    --gold:#B4862B;
+    --paper:#FFFFFF;
+    --ink:#1A1A1A;
+    --ink-soft:#6E6E6E;
+    --line:#E1E1E1;
+    --accent:#111111;
+    --accent-tint:#F0F0F0;
     --correct:#2F6E4E;
-    --correct-bg:#E4EFE6;
+    --correct-bg:#E9F3EC;
     --wrong:#A63B32;
-    --wrong-bg:#F5E3E0;
-    --card-shadow: 0 2px 0 rgba(35,39,34,0.06), 0 10px 24px rgba(35,39,34,0.08);
+    --wrong-bg:#FBEDEB;
+    --tap-bg:#F2F2F2;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
     font-family:"Noto Sans JP", sans-serif;
-    background:
-      radial-gradient(circle at 1px 1px, rgba(35,39,34,0.06) 1px, transparent 1px) 0 0/22px 22px,
-      var(--paper);
+    background: var(--paper);
     color:var(--ink);
     min-height:100vh;
     display:flex;
     justify-content:center;
     -webkit-font-smoothing:antialiased;
   }
+  .material-icons{ font-size:20px; line-height:1; user-select:none; }
+
   #app{
     width:100%;
     max-width:460px;
     min-height:100vh;
-    background:transparent;
     display:flex;
     flex-direction:column;
     position:relative;
   }
+
+  /* ---------- APP HEADER (persistent) ---------- */
+  .app-header{
+    position:sticky; top:0; z-index:30;
+    display:none;
+    align-items:center; justify-content:space-between;
+    padding:14px 18px;
+    background:#fff;
+    border-bottom:1px solid var(--line);
+  }
+  .app-header.visible{ display:flex; }
+  .app-header-title{
+    font-family:"WDXL Lubrifont JP N", sans-serif;
+    font-weight:400;
+    font-size:19px;
+    letter-spacing:.01em;
+    color:#007765;
+  }
+  .icon-btn{
+    width:36px; height:36px; border-radius:8px; border:1.5px solid var(--line);
+    background:#fff; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0; color:var(--ink);
+  }
+  .icon-btn:active{ background:var(--tap-bg); }
+
   .screen{ display:none; flex-direction:column; flex:1; padding:20px 18px 28px; }
   .screen.active{ display:flex; }
 
   /* ---------- HOME ---------- */
-  #home{ justify-content:center; align-items:stretch; text-align:center; gap:0; }
-  .home-eyebrow{
-    font-size:12px; letter-spacing:.14em; color:var(--gold);
-    margin-bottom:10px; font-weight:600;
-  }
-  .home-title{
-    font-family:"Shippori Mincho", serif;
-    font-weight:800;
-    font-size:34px;
-    line-height:1.35;
-    margin:0 0 18px;
-    color:var(--teal-deep);
-  }
-  .home-title small{
-    display:block; font-size:15px; font-weight:500; color:var(--ink-soft);
-    margin-top:8px; font-family:"Noto Sans JP", sans-serif; letter-spacing:.02em;
-  }
-  .home-figure{
-    margin:6px auto 22px;
-    width:150px; height:150px;
-    border-radius:50%;
-    background:var(--paper-deep);
-    border:1px solid var(--line);
-    display:flex; align-items:center; justify-content:center;
-    position:relative;
-  }
-  .home-figure svg{ width:78px; height:78px; }
+  #home{ gap:0; }
   .home-desc{
-    font-size:14.5px; line-height:1.85; color:var(--ink-soft);
-    max-width:340px; margin:0 auto 30px;
+    font-size:14px; line-height:1.8; color:var(--ink-soft);
+    margin:2px 0 24px; text-align:left;
   }
-  .home-stats{
-    display:flex; justify-content:center; gap:26px; margin-bottom:34px;
+
+  .cat-label{
+    font-size:12px; color:var(--ink-soft); font-weight:600; margin:0 0 10px 2px;
   }
-  .home-stat b{ display:block; font-family:"Shippori Mincho",serif; font-size:22px; color:var(--teal-deep); }
-  .home-stat span{ font-size:11.5px; color:var(--ink-soft); letter-spacing:.04em; }
+  .cat-tabs{
+    display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px;
+  }
+  .cat-tab{
+    flex:1 1 auto;
+    min-width:calc(33% - 6px);
+    text-align:center;
+    padding:10px 8px;
+    border-radius:8px;
+    border:1px solid #000;
+    background:#fff;
+    color:#000;
+    font-family:"Noto Sans JP", sans-serif;
+    font-weight:700;
+    font-size:13px;
+    cursor:pointer;
+  }
+  .cat-tab.active{
+    border-color:#000;
+    background:#000;
+    color:#fff;
+  }
+  .cat-count{
+    font-size:12.5px; color:var(--ink-soft); margin-bottom:24px;
+  }
+  .cat-count b{ color:var(--ink); font-weight:700; }
+
+  .slider-block{ margin-bottom:28px; }
+  .slider-label{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-size:13px; color:var(--ink-soft); font-weight:600; margin-bottom:10px;
+  }
+  .slider-label b{ font-size:20px; color:var(--ink); font-weight:800; margin:0 2px; }
+  input[type="range"]{
+    -webkit-appearance:none; appearance:none;
+    width:100%; height:4px; border-radius:99px;
+    background:var(--line); outline:none; margin:0;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; appearance:none;
+    width:22px; height:22px; border-radius:50%;
+    background:#fff; border:3px solid var(--ink); cursor:pointer;
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:16px; height:16px; border-radius:50%;
+    background:#fff; border:3px solid var(--ink); cursor:pointer;
+  }
+
+  .home-actions{ display:flex; flex-direction:column; gap:10px; margin-top:auto; }
 
   .btn-primary{
     display:inline-flex; align-items:center; justify-content:center; gap:8px;
-    background:var(--teal); color:#fff; border:none;
+    background:var(--accent); color:#fff; border:none;
     font-family:"Noto Sans JP", sans-serif; font-weight:700; font-size:16px;
     padding:16px 20px; border-radius:8px; cursor:pointer;
-    box-shadow: var(--card-shadow);
-    transition: transform .12s ease, background .15s ease;
   }
-  .btn-primary:active{ transform:translateY(1px) scale(.99); background:var(--teal-deep); }
-
+  .btn-secondary{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    background:#fff; color:var(--ink); border:1.5px solid var(--accent);
+    font-family:"Noto Sans JP", sans-serif; font-weight:700; font-size:16px;
+    padding:14.5px 20px; border-radius:8px; cursor:pointer;
+  }
   .btn-ghost{
     display:inline-flex; align-items:center; justify-content:center;
-    background:transparent; color:var(--teal-deep); border:1.5px solid var(--teal-deep);
+    background:transparent; color:var(--ink); border:1.5px solid var(--ink);
     font-family:"Noto Sans JP", sans-serif; font-weight:600; font-size:14.5px;
     padding:13px 20px; border-radius:8px; cursor:pointer; margin-top:12px;
   }
+
+  /* ---------- SHARED TOPBAR (in-screen, e.g. study) ---------- */
+  .topbar{
+    display:flex; align-items:center; gap:10px; margin-bottom:16px;
+  }
+  .topbar-title{ font-family:"Noto Sans JP", sans-serif; font-weight:800; font-size:16px; color:var(--ink); }
 
   /* ---------- QUIZ ---------- */
   #quiz{ gap:0; }
@@ -110,63 +163,46 @@
     font-size:12.5px; color:var(--ink-soft); margin-bottom:14px; padding:0 2px;
   }
   .quiz-topbar .prog{ font-weight:600; letter-spacing:.03em; }
-  .quiz-topbar .score{ font-weight:600; color:var(--teal-deep); }
+  .quiz-topbar .score{ font-weight:600; color:var(--ink); }
   .progress-track{
     height:4px; background:var(--line); border-radius:99px; margin-bottom:20px; overflow:hidden;
   }
-  .progress-fill{ height:100%; background:var(--gold); border-radius:99px; transition:width .25s ease; }
+  .progress-fill{ height:100%; background:var(--accent); border-radius:99px; transition:width .25s ease; }
 
   .logo-card{
     background:#FFFFFF;
-    border:1px solid var(--line);
-    border-radius:14px;
-    box-shadow: var(--card-shadow);
     padding:26px 20px;
     display:flex; align-items:center; justify-content:center;
     height:200px;
     margin-bottom:18px;
-    position:relative;
   }
-  .logo-card::before{
-    content:"Q"attr(data-q);
-    position:absolute; top:10px; left:14px;
-    font-family:"Shippori Mincho", serif;
-    font-size:11px; color:var(--line); letter-spacing:.08em;
-  }
-  .logo-card img{
-    max-width:100%; max-height:150px; object-fit:contain;
-  }
+  .logo-card img{ max-width:100%; max-height:150px; object-fit:contain; }
 
   .search-wrap{ position:relative; margin-bottom:10px; }
   .search-wrap input{
-    width:100%; padding:12px 14px 12px 38px; font-size:14.5px;
-    border:1.5px solid var(--line); border-radius:9px; background:#fff;
+    width:100%; padding:10px 8px 10px 30px; font-size:14.5px;
+    border:none; border-bottom:2px solid var(--ink); border-radius:0; background:transparent;
     font-family:"Noto Sans JP", sans-serif; color:var(--ink);
     outline:none;
   }
-  .search-wrap input:focus{ border-color:var(--teal); }
   .search-wrap .icon{
-    position:absolute; left:12px; top:50%; transform:translateY(-50%);
-    width:16px; height:16px; opacity:.5;
+    position:absolute; left:2px; top:50%; transform:translateY(-50%);
+    color:var(--ink-soft); display:flex;
   }
 
   .choice-list{
     flex:1;
     overflow-y:auto;
-    border:1.5px solid var(--line);
-    border-radius:9px;
-    background:#fff;
     max-height:280px;
   }
   .choice-item{
     display:block; width:100%; text-align:left;
-    padding:13px 16px; font-size:14.5px; font-family:"Noto Sans JP", sans-serif;
-    background:none; border:none; border-bottom:1px solid var(--line);
+    padding:13px 4px; font-size:14.5px; font-family:"Noto Sans JP", sans-serif;
+    background:none; border:none; border-bottom:1px solid #000;
     color:var(--ink); cursor:pointer;
   }
-  .choice-item:last-child{ border-bottom:none; }
-  .choice-item:active{ background:var(--paper-deep); }
-  .choice-empty{ padding:24px 16px; text-align:center; color:var(--ink-soft); font-size:13.5px; }
+  .choice-item:active{ background:var(--tap-bg); }
+  .choice-empty{ padding:24px 4px; text-align:center; color:var(--ink-soft); font-size:13.5px; }
 
   /* ---------- FEEDBACK ---------- */
   .feedback-badge{
@@ -178,7 +214,7 @@
   .feedback-badge.wrong{ background:var(--wrong-bg); color:var(--wrong); }
 
   .feedback-answer{
-    font-family:"Shippori Mincho", serif; font-weight:700; font-size:19px;
+    font-family:"Noto Sans JP", sans-serif; font-weight:800; font-size:19px;
     color:var(--ink); margin:0 0 4px;
   }
   .feedback-your-answer{
@@ -190,7 +226,7 @@
     padding:16px 16px; margin-bottom:18px; flex:1; overflow-y:auto;
   }
   .origin-box .label{
-    font-size:11px; letter-spacing:.1em; color:var(--gold); font-weight:700; margin-bottom:8px;
+    font-size:11px; letter-spacing:.1em; color:var(--ink-soft); font-weight:700; margin-bottom:8px;
   }
   .origin-box p{
     font-size:14px; line-height:1.9; color:var(--ink); margin:0;
@@ -198,9 +234,13 @@
 
   /* ---------- RESULT ---------- */
   #result{ justify-content:center; text-align:center; }
+  .result-eyebrow{
+    font-size:12px; letter-spacing:.14em; color:var(--ink-soft);
+    margin-bottom:10px; font-weight:700; text-align:center;
+  }
   .result-score{
-    font-family:"Shippori Mincho", serif; font-weight:800; font-size:56px;
-    color:var(--teal-deep); line-height:1; margin:6px 0 4px;
+    font-family:"Noto Sans JP", sans-serif; font-weight:900; font-size:56px;
+    color:var(--ink); line-height:1; margin:6px 0 4px;
   }
   .result-score span{ font-size:22px; font-weight:600; color:var(--ink-soft); }
   .result-label{ font-size:14px; color:var(--ink-soft); margin-bottom:26px; }
@@ -208,35 +248,91 @@
     font-size:15px; line-height:1.8; color:var(--ink); margin:0 auto 30px; max-width:320px;
   }
 
-  .footer-note{
-    text-align:center; font-size:11px; color:var(--ink-soft); opacity:.65;
-    margin-top:auto; padding-top:18px;
+  /* ---------- STUDY GRID ---------- */
+  #study{ gap:0; }
+  .study-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:10px;
+    overflow-y:auto;
+    padding-bottom:10px;
   }
+  .study-card{
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#fff;
+    padding:14px 10px 12px;
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+    cursor:pointer;
+  }
+  .study-card:active{ background:var(--tap-bg); }
+  .study-card img{ width:100%; height:64px; object-fit:contain; }
+  .study-card .sc-name{
+    font-size:12px; text-align:center; line-height:1.45; color:var(--ink);
+    font-weight:500;
+  }
+  .study-empty{ text-align:center; color:var(--ink-soft); font-size:13.5px; padding:40px 0; }
+
+  /* ---------- MODAL ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(20,20,20,0.5);
+    display:none; align-items:flex-end; justify-content:center; z-index:50;
+  }
+  .modal-overlay.active{ display:flex; }
+  .modal-sheet{
+    width:100%; max-width:460px; background:#fff;
+    border-radius:16px 16px 0 0;
+    padding:22px 20px 26px;
+    max-height:82vh; overflow-y:auto;
+    position:relative;
+  }
+  .modal-close{
+    position:absolute; top:14px; right:16px;
+  }
+  .modal-logo{
+    display:flex; align-items:center; justify-content:center;
+    height:140px; margin-bottom:16px;
+  }
+  .modal-logo img{ max-width:100%; max-height:120px; object-fit:contain; }
+  .modal-name{
+    font-family:"Noto Sans JP", sans-serif; font-weight:800; font-size:19px;
+    color:var(--ink); margin:0 0 2px; text-align:center;
+  }
+  .modal-cat{
+    text-align:center; font-size:11.5px; color:var(--ink-soft); font-weight:600;
+    letter-spacing:.06em; margin-bottom:16px;
+  }
+  .modal-origin-label{
+    font-size:11px; letter-spacing:.1em; color:var(--ink-soft); font-weight:700; margin-bottom:8px;
+  }
+  .modal-origin p{ font-size:14px; line-height:1.9; color:var(--ink); margin:0; }
 </style>
 </head>
 <body>
 <div id="app">
 
+  <div class="app-header" id="appHeader">
+    <button class="icon-btn" id="headerHomeBtn"><span class="material-icons">chevron_left</span></button>
+    <span class="app-header-title">医大のロゴを学ぼう</span>
+  </div>
+
   <!-- HOME -->
   <section id="home" class="screen active">
-    <div class="home-eyebrow">JAPAN MEDICAL SCHOOL LOGO QUIZ</div>
-    <h1 class="home-title">医学部ロゴ図鑑
-      <small>全国82医学部、ロゴだけで当てられるか？</small>
-    </h1>
-    <div class="home-figure">
-      <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M32 6 L34 22 L48 12 L38 26 L54 28 L38 32 L48 46 L34 36 L32 52 L30 36 L16 46 L26 32 L10 28 L26 26 L16 12 L30 22 Z" fill="#215951" opacity="0.85"/>
-        <circle cx="32" cy="29" r="5.5" fill="#F6F2E7"/>
-      </svg>
+    <p class="home-desc">国公立・私立・防衛医科大学校まで、全82校の校章とロゴマークを収録。カテゴリと出題数を選んで、クイズに挑戦するか、由来をじっくり学べます。</p>
+
+    <div class="cat-label">対象を選ぶ</div>
+    <div class="cat-tabs" id="catTabs"></div>
+    <div class="cat-count" id="catCount"></div>
+
+    <div class="slider-block">
+      <div class="slider-label">出題数　<span><b id="qCountVal">10</b>問</span></div>
+      <input type="range" id="qCountSlider" min="1" max="82" value="10">
     </div>
-    <p class="home-desc">国公立・私立・防衛医科大学校まで、全82校の校章とロゴマークを収録。画像だけを頼りに大学名を当てて、由来も学べます。</p>
-    <div class="home-stats">
-      <div class="home-stat"><b>82</b><span>校収録</span></div>
-      <div class="home-stat"><b>4</b><span>国立/公立/私立/官立</span></div>
-      <div class="home-stat"><b>全問</b><span>由来つき</span></div>
+
+    <div class="home-actions">
+      <button class="btn-primary" id="startBtn">クイズに挑戦する</button>
+      <button class="btn-secondary" id="studyBtn">ロゴを学習する</button>
     </div>
-    <button class="btn-primary" id="startBtn">クイズをはじめる</button>
-    <div class="footer-note">画像出典：igakulogo コレクション</div>
   </section>
 
   <!-- QUIZ -->
@@ -247,20 +343,18 @@
     </div>
     <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
 
-    <div class="logo-card" id="logoCard" data-q="">
+    <div class="logo-card" id="logoCard">
       <img id="logoImg" src="" alt="ロゴ">
     </div>
 
-    <!-- answering state -->
     <div id="answeringPane">
       <div class="search-wrap">
-        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="#232722" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" placeholder="大学名で検索...">
+        <span class="icon material-icons">search</span>
+        <input type="text" id="searchInput" placeholder="大学名・ひらがなで検索...">
       </div>
       <div class="choice-list" id="choiceList"></div>
     </div>
 
-    <!-- feedback state -->
     <div id="feedbackPane" style="display:none; flex:1; flex-direction:column;">
       <div class="feedback-badge" id="feedbackBadge"></div>
       <p class="feedback-answer" id="feedbackAnswer"></p>
@@ -275,7 +369,7 @@
 
   <!-- RESULT -->
   <section id="result" class="screen">
-    <div class="home-eyebrow">RESULT</div>
+    <div class="result-eyebrow">RESULT</div>
     <div class="result-score" id="resultScore">0<span>/82</span></div>
     <div class="result-label">正解</div>
     <p class="result-comment" id="resultComment"></p>
@@ -283,16 +377,48 @@
     <button class="btn-ghost" id="homeBtn">ホームに戻る</button>
   </section>
 
+  <!-- STUDY -->
+  <section id="study" class="screen">
+    <div class="topbar">
+      <button class="icon-btn" id="studyBackBtn"><span class="material-icons">arrow_back</span></button>
+      <span class="topbar-title" id="studyTitle">学習：すべて</span>
+    </div>
+    <div class="search-wrap">
+      <span class="icon material-icons">search</span>
+      <input type="text" id="studySearch" placeholder="大学名・ひらがなで検索...">
+    </div>
+    <div style="height:12px;"></div>
+    <div class="study-grid" id="studyGrid"></div>
+  </section>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-sheet">
+    <button class="icon-btn modal-close" id="modalClose"><span class="material-icons">close</span></button>
+    <div class="modal-logo"><img id="modalImg" src="" alt="ロゴ"></div>
+    <p class="modal-name" id="modalName"></p>
+    <div class="modal-cat" id="modalCat"></div>
+    <div class="modal-origin-label">校章・ロゴの由来</div>
+    <div class="modal-origin"><p id="modalOrigin"></p></div>
+  </div>
 </div>
 
 <script>
-const DATA = [{"name": "福島県立医科大学", "path": "Q/Q_Fukushima.png", "origin": "緑・サクラ・「F」の文字を組み合わせ、大学らしさを視覚化。立志哲洋氏（東京都）の作品。平成20年11月2日制定。"}, {"name": "京都府立医科大学", "path": "Q/Q_Kyoto.png", "origin": "情報未確認（校章の具体的な意匠の由来は見当たらず）。1872年、東山・粟田口青蓮院に仮療病院を開設したのが起源。"}, {"name": "名古屋市立大学医学部", "path": "Q/Q_Nagoya.png", "origin": "3種類のシンボルが存在。①学章：昭和25年（1950年）評議会で審議決定、公式な場で使用。②ハートマーク： 昭和34年（1959年）制作、医学研究科・薬学研究科由来の伝統を象徴、同窓会が使用。③NCUマーク：開学50周年 （2000年）記念に制作、他校との差別化・ブランディング用。シンボルカラー「エンジ色」は、強い意志・情熱、 不屈の精神、積み重ねる伝統を意識させる色。"}, {"name": "奈良県立医科大学", "path": "Q/Q_Nara.png", "origin": "イニシャル「N」がモチーフ。二重の円弧は医学と看護学の支え合う関係を意味し、そこから伸びる葉形は医療人 としての成長・未来への飛躍をイメージ。「奈良県立医科大学の将来像」（H29年策定）の道しるべとして、 デザイン案を一般公募し制定。"}, {"name": "大阪公立大学医学部", "path": "Q/Q_Osaka.png", "origin": "シンボルマークの軸は「銀杏」「ヤシ」「桜」。大阪市立大学と大阪府立大学、大阪府と大阪市を象徴する3つの 伝統的シンボルが融合したもの。約140年間大阪を牽引してきた2大学の伝統と、公立大学として地域に根差した 教育・研究を続ける姿勢を示す。中心から伸びやかに花ひらくフォルムは「知の拠点」に人や知が結集し、世界へ 飛翔していく姿を表す。（参考：大阪府立大学（旧）は3枚の銀杏で3つの府立大学統合を、大阪市立大学は商神 マーキュリーの杖翼と市章「みをつくし」をモチーフにしていた）"}, {"name": "札幌医科大学", "path": "Q/Q_Sapporo.png", "origin": "現シンボルマークは開学30周年（1980年）記念で制定。同窓会協力のもと学内・卒業生から図案を公募し、 「北海道デザイン界の父」栗谷川健一氏がデザイン。蛇の形は大学の頭文字「S」、下が太くなった杖は大地に 根を張る不動のたくましさを表す。北海道を象徴する「七光星」、飛躍と発展を示す「羽」、英知と質実を表す 「柏の葉」も描かれている。"}, {"name": "和歌山県立医科大学", "path": "Q/Q_Wakayama.png", "origin": "校章は、和歌山出身の医聖・華岡青洲が全身麻酔薬として用いた「まんだらげ（チョウセンアサガオ）」の花に 「医」の文字を組み合わせたもの。花の図案は陶芸家・富本憲吉が制作したもので、もともとは1963年（昭和38年） の医学総会のために描かれた。その後「医」の文字を加え、長く大学のマークとして使用され、1987年（昭和62年） に正式な校章として認定された。"}, {"name": "横浜市立大学医学部", "path": "Q/Q_Yokohama.png", "origin": "現行の校章（旧字体の「大学」の文字を取り囲む意匠）は1949年の新制大学発足以来使用。諸説あるが、 港横浜のイメージから「神奈川県の鳥」であるカモメ3羽を表しているとも言われる。 現行シンボルマーク（YCUの3文字を組み合わせたもの）は2005年4月の公立大学法人化を機に制定。全国公募27点の中から 選考委員会が選出、原案作者は当時神奈川県立川和高校3年生・豊浦万莉絵さん。光・輝く未来をイメージする色で、 学生の強い精神力・情熱・利他的な愛を象徴。"}, {"name": "獨協医科大学", "path": "P/P_Dokkyo.png", "origin": "獨協グループ共通の「D」マークは、前身・獨逸学協会学校（1883年創立）の時代から使ってきたドイツの花文字 （ブラックレター体）の\"D\"を、よりシャープなデザインにリフレッシュしたもの。"}, {"name": "藤田医科大学", "path": "P/P_Fujita.png", "origin": "シンボルは、藤田学園の伝統的シンボルであった「プロミネンスマーク」が表す「太陽・大気・水」の要素を継承。 球体は昇りゆく太陽と建学の精神「独創一理」を象徴。ダイナミックな3本のラインは水をイメージするとともに 「教育」「研究」「医療・福祉」の3つの使命を表し、それを取り囲む背景は生命に不可欠な大気のように学園の 活動を支え続ける「経営」を表現。基本カラーは「フジタ ウィスタリア」（藤色）。"}, {"name": "福岡大学医学部", "path": "P/P_Fukuoka.png", "origin": "現行の校章は昭和59年（1984年）、創立50周年を機に制定。前身・福岡高等商業学校の校章をベースに、学部間の 強固な結束を9つの山形で示し「大学」の文字を囲む。基部に発祥学部（商学部）ゆかりの商業神マーキュリーの 翼を模し、国際化をめざす福岡大学のイニシャル「FU」を据え、燃えさかる向学の炬火を冠している。"}, {"name": "兵庫医科大学", "path": "P/P_Hyogo.png", "origin": "HYOGOの頭文字「H」をモチーフに、「教育」「研究」「診療」「社会貢献」という4つの活動が重なり合って連携 する姿（円環）を表現。斜体の「H」はビジョンを実践する躍動を表す。2022年、開学50周年を機にUI （ユニバーシティ・アイデンティティ）を一新した際に制定。"}, {"name": "国際医療福祉大学医学部", "path": "P/P_IUHW.png", "origin": "情報未確認。"}, {"name": "自治医科大学", "path": "P/P_Jichi.png", "origin": "校章：昭和49年12月、学内公募の中から奥野正孝氏（三重県、1期生）の作品を選定。太い曲線は頭文字「J」と、 全国の都道府県が共同設立した特性を象徴する「日本列島」を意味し、中に「医大」の文字を配置。 シンボルマーク（平成2年制定）：中央に「自」の字、両側に構内に多い「松の木」をデザインし、学問の府を 本の形で表現。"}, {"name": "東京慈恵会医科大学", "path": "P/P_Jikei.png", "origin": "情報未確認（校章デザインの具体的な由来は見当たらず）。建学の精神は高木兼寛の遺訓「病気を診ずして病人を 診よ」。"}, {"name": "順天堂大学医学部", "path": "P/P_Juntendo.png", "origin": "校章は、学是である「仁」を意匠化したもの。順天堂に集う者すべてが目指す理念を表現。「A法人章」も同じく 「仁義礼智信」の「仁」を図案化したもので、明治初期の順天堂診察券や薬袋、佐藤尚中の肖像、医専の校章にも 使用されてきた。スクールカラーは「江戸紫」。"}, {"name": "関西医科大学", "path": "P/P_Kansai.png", "origin": "校章は「梅鉢（うめばち）」と呼ばれる梅の花の意匠に「医」の字を組み合わせたもの。意匠名は公式グッズ等で 「梅花梅鉢」として確認できるが、詳しい由来の説明文は公式サイト上には見当たらなかった。"}, {"name": "慶應義塾大学医学部", "path": "P/P_Keio.png", "origin": "ペンマークは、明治18年（1885年）頃、塾生が教科書中の一節「ペンは剣よりも強し」にヒントを得て、帽章と して自分たちで考案したのが始まり。慶應義塾が公式に制定したものではなく塾生有志のアイデアから生まれ、 歳月を経て公認された。1990年、大学紋章（エンブレム）が別途制定され、ペンマークと塾旗の色調を基調に、 ラテン語 \"Calamvs Gladio Fortior\"（ペンは剣より強し）などで構成されている。"}, {"name": "近畿大学医学部", "path": "P/P_Kindai.png", "origin": "学園章（校章）は、学園花である梅の花弁をモチーフ。「梅花霜雪を経て開く」（自然の厳しさを経て、春いちばん 品格高き花が咲きひらく）という思いを象徴。5つの花弁と中心の花芯で「大学」の「大」の字と「人」そのものを 表現し、大学の現在・未来に向かっての存在と位置をかたどる。花弁の一部が離れているのは未来志向に基づく 内面の未完、さらなる充溢・完熟を目指す形姿を表す。平成2年6月、創立65周年を記念して学園シンボルマークとして 制定。"}, {"name": "北里大学医学部", "path": "P/P_Kitasato.png", "origin": "学祖・北里柴三郎の建学の精神「開拓」（科学者としてのパイオニア精神）「報恩」（社会への感謝と貢献） 「叡智と実践」「不撓不屈」に由来。盾型エンブレムの「KITASATO UNIV.」文字と意匠は、この精神を象徴する 伝統的な校章として使われている。"}, {"name": "久留米大学医学部", "path": "P/P_Kurume.png", "origin": "久留米大学の「久」の字をモチーフにした未来的な表現。本来\"変わらない\"という意味を持つ「久」を用いることで、 創立時の理念や役割を継承しつつ永続的な発展を表現。「久」を形作る円は豊かな人間性とグローバルな視野を 表し、5つの円は現在の5学部を表す。2008年制定、2009年商標登録。"}, {"name": "杏林大学医学部", "path": "P/P_Kyorin.png", "origin": "「杏林」の名は、後漢時代の名医・董奉（とうほう）が治療費の代わりに患者に杏の木を植えさせ、やがて林と なったという故事に由来し、「良医」「社会への貢献」を意味する語。 シンボルマーク（2006年制定）は、建学の精神「真・善・美の探究」の3要素を三角形の3つの角で表現。安定した 不変の角が「真」、豊かな曲線に囲まれた角が「善」、天空に伸びる曲線の角が「美」、そして新しい風が「杏林」 の意味する社会貢献を表す。"}, {"name": "日本医科大学", "path": "P/P_NipponMedicalSchool.png", "origin": "現行エンブレムは、ギリシャ神話由来のアスクレピオスの杖（医療の象徴）と「NMS」の文字を組み合わせたもの。"}, {"name": "大阪医科薬科大学", "path": "P/P_OMPU.PNG", "origin": "「大阪医科薬科大学」のイニシャル「O」と英文頭文字「OMPU」がもとになっている。「O」を模した上部デザインは ハートをイメージし生命の躍動を表現。2色の「O」の重なりには『大阪医科大学と大阪薬科大学の統合による医療の 発展』の意味が込められている。「ひとに寄り添うまごころ」とその基盤となる「高度な教育・研究」を表す。 2021年4月の大学統合にあたり制定。"}, {"name": "埼玉医科大学", "path": "P/P_Saitama.png", "origin": "校章：「大學」の文字を支える三個の巴形は、大学名に冠している埼玉の象徴である勾玉を表す。勾玉は埼玉県章 にも用いられ、\"魂、中心、円満\"を意味するといわれている。（記念誌「創立十年のあゆみ」より）"}, {"name": "産業医科大学", "path": "P/P_Sangyo.png", "origin": "9つの円を「人・企業・社会」に見立て、「人の健康」が「企業の健康」をつくり、それが「社会の健康」に つながるという考え方をロゴ化したもの。"}, {"name": "昭和医科大学", "path": "P/P_Showa.png", "origin": "校章は百合の花に「昭大」の文字を組み合わせたもの。百合は純潔、謙虚さ、優しい心、美のシンボルとされる。"}, {"name": "聖マリアンナ医科大学", "path": "P/P_StMarianna.png", "origin": "情報未確認（校章デザイン自体の由来は見当たらず）。建学の精神は「キリスト教的人類愛に根ざした生命の 尊厳」。"}, {"name": "帝京大学医学部", "path": "P/P_Teikyo.png", "origin": "学章は、蔦（つた）の葉がモチーフ。縦書きの「大學」の文字の両脇に蔦の葉を垂らしたデザイン。 シンボルマーク（創立50周年・2016年制定）は、「TEIKYO」のイニシャル「T」を3つの楕円で図案化。3つの 楕円は垣根を超えてはばたく学生たちを表し、同時に教育指針「実学」「国際性」「開放性」をシンボライズ。 中央の白い楕円は学生たちの未知なる力を表現。"}, {"name": "東北医科薬科大学", "path": "P/P_Tohokuika.png", "origin": "ロゴマークに表示されている6つの星は東北6県を表し、地域社会とのさらなる協働を願う気持ちが込められている。"}, {"name": "東海大学医学部", "path": "P/P_Tokai.png", "origin": "学園の校章には波と翼がデザインされ、洋々とした大海（太平洋）と、それを俯瞰して悠然と翼を広げ飛翔する かもめを表す。「東海」はアジア東の太平洋を意味し、太平洋のように大きく豊かな心、広い視野を育みたいと いう願いが込められている。"}, {"name": "東京女子医科大学", "path": "P/P_TokyoWomens.png", "origin": "情報未確認。円形の中に「TWMU」の文字、周囲に薔薇の意匠。"}, {"name": "愛知医科大学", "path": "P/P_aichiika.PNG", "origin": "校章は、常緑樹「橘（たちばな）」がモチーフ。橘は京都御所で「右近の橘」として珍重され、文化勲章の デザインにもなっている。中国の故事では、橘の葉と井戸水で疫病患者を治療したとされ、後に「橘井 （きっせい）」という語が医師を意味する言葉として使われるようになった。橘の力強い意気をもって世界人類の 幸福に貢献するという思いが込められている。全体構成は愛知の「A」を基本形に、医科の「I」「K」、 「人」の文字をイメージし、医療メスと水平線に見立てたラインは地域に貢献する医療のあり方を表現。"}, {"name": "岩手医科大学", "path": "P/P_iwateidai.PNG", "origin": "校章の由来：「𨭎」（えい／医術を表す）と「巫」（みこ／神意をうけた治療者を表す）の会意文字、そして 「大」（大学）を図案化したもの。医療の起源の古さと医学者としての心構えを示す。 現行シンボルマークは、岩手山をモチーフに「Iwate」の「i」と「Medical」の「m」を図案化。3学部を3本の ストライプ（𨭎・巫・大）で表し、上の楕円は未来を表現。"}, {"name": "金沢医科大学", "path": "P/P_kanazawaidai.png", "origin": "校章は「橘（たちばな）」の葉と実を図案化したもの。中国の故事『神仙伝』にちなむもので、後漢の名医・ 董奉の故事（「杏林」の由来と同系統の逸話）を意訳したもの。愛知医科大学の校章にも通じる、医師を 指す言葉「橘井（きっせい）」の伝承に基づく。"}, {"name": "川崎医科大学", "path": "P/P_kawasaki.png", "origin": "シンボルマークは2つの柔らかな形で構成され、人が寄り添う形を抽象化したもの。デザインコンセプトは \"assist\"（ラテン語 \"ad sisto\"＝「傍らに立つ」に由来）で、川崎学園の成果領域である教育・医療・福祉の 基本姿勢を表す。同時に学園の頭文字「K」も表している。統一カラーのブルーは、やさしさ、信頼、清潔感を象徴。 平成18年（2006年）12月制定。"}, {"name": "日本大学医学部", "path": "P/P_nichidai.png", "origin": "明治36年（1903年）の制服制帽制定時に徽章も制定。校名の「日本」にちなみ、国花とされた桜を図案化。 校歌にも「朝日と輝く国の名負いて」とある。現在は「自主創造」を示す新ロゴマーク「Nドット」も制定され、 ロゴカラーは緋色（NICHIDAI RED）。"}, {"name": "東邦大学医学部", "path": "P/P_toho2.PNG", "origin": "シンボルマークは、建学の精神「自然・生命・人間」をかたちにしたもの。自然、生命、人間をモチーフにした 12種類のアイコンが集まり青い地球を構成し、自然や生命との調和・共生、助け合い、愛によって結ばれる世界観 を表す。この建学の精神は創立者・額田晉の著書『自然・生命・人間』に由来（英語では\"NATURE LIFE MAN\"）。"}, {"name": "東京医科大学", "path": "P/P_tokyoidai.png", "origin": "校章は、東京医学専門学校時代より「醫」の旧漢字の裾を丸くした形。創学運動の学生会本部先輩の帽章に原型が 見られる。この独特の丸い形は弾丸を表現し、学生団が一丸となる意味が込められているとも言われる。 スクールカラーの臙脂色は、血署連判状の血判に最も近い色だからとも伝えられる。"}, {"name": "秋田大学医学部", "path": "N/N_Akita.png", "origin": "前身である秋田鉱山専門学校の校章に使われていた「ダイヤモンドの正八面体」をオマージュしたもので、 ダイヤモンドのブリリアントカットをモチーフに作成。磨き上げることでその輝きを最大限に引き出すダイヤモンド になぞらえ、教育と研究を通じて学生を育成し課題解決の知識とスキルを磨き上げる姿勢、多面的な美しさから 多様な視点を持つグローバルなリーダー育成の理念を象徴する。"}, {"name": "旭川医科大学", "path": "N/N_Asahikawa.png", "origin": "旭川医科大学のイニシャル「A」をストライプで図案化。右上がりに跳ねる様は、豊かな自然の旭川から医療人 及び研究者を育成し、地域に根ざした医療及び福祉のさらなる向上（発信）を表現。薄紫はラベンダーの景観や 医療の英知・国際貢献、緑は再生や生命の輝きを意味する。"}, {"name": "千葉大学医学部", "path": "N/N_Chiba.png", "origin": "学章（八角形の赤いマーク）は昭和24年（1949年）10月、赤穴宏氏（元千葉大学名誉教授）がデザイン。 Chiba Daigakuの頭文字「C」「D」を組み合わせ、千葉大学の「千」を配して構成。輪郭は無限の生命力を象徴する 「植物の種子」をかたどっている。左側のガーネット（えんじ）色は情熱を、右側の白色は純粋を表現。長年 「シンボルマーク」として使われてきたが、2013年3月に正式に「学章」として制定された。"}, {"name": "愛媛大学医学部", "path": "N/N_Ehime.png", "origin": "ブランドマークは、「地域とともに輝く大学」を目指す愛媛大学が「愛媛の知の拠点（ドット・エヒメ）」と なることを決意表明。左の円は太陽を、右の「e」は躍動する姿を、全体はすこやかに伸びていく新芽を表す。 愛媛みかんを連想させる黄色は明朗さ・快活さの象徴。ロゴタイプは、「愛媛」という画数の多い漢字を シンプルに見せるため、和文・欧文ともにシャープなフォルムで構成。"}, {"name": "福井大学医学部", "path": "N/N_Fukui.png", "origin": "学章は、二つの円が結びつき無限大（インフィニティ）の形を形成したもの。それらの円は統合前の「福井大学と 福井医科大学」、また「科学と技術」を表し、無限大は新大学の可能性を表現している。中央の反転部には福井 大学の頭文字「f」を表出。色は「福井の美しい海と空」「若さと知性」を表す。2003年の旧福井大学・旧福井 医科大学統合を機に学内外から公募し、2004年10月制定。"}, {"name": "岐阜大学医学部", "path": "N/N_Gifu.png", "origin": "学章は、鵜舟と篝火を意味する。篝火は「学問」、舟は「人類の幸福」を象徴するとされる。また、陰陽2体の 組み合わせは天地自然、存在と活動の調和・バランスを表す。黒とオレンジは意志と情熱、感性の豊かさと品位を 表現する。さらに、学章は弓と組み合わさって「G」を形成している。"}, {"name": "群馬大学医学部", "path": "N/N_Gumma.png", "origin": "群馬大学の英頭文字「G」をモチーフに、緑と青で豊かな自然環境を表現。学生の成長・活躍、新しい未来の 創造、社会への貢献をイメージしている。"}, {"name": "浜松医科大学", "path": "N/N_Hamamatsu.png", "origin": "本学のローマ字での頭文字「h」をデザイン化。水色部分が遠州灘（下部分の曲線）、浜名湖の水面、浜松から 望む富士山（右上の突起）で浜松の特色を、全体の曲線が生命の源である自然な水のゆらぎ、医療の重要 キーワード「生命」を表現。オレンジ色の丸と水色部分の両方を合わせて全体を見ると、元気・健康・躍動を 表現した人（丸を頭、水色の両端を手に見立てる）に見え、人類の健康と福祉に貢献することをイメージしている。"}, {"name": "広島大学医学部", "path": "N/N_Hiroshima.png", "origin": "学章は、清新な生命とフェニックスの葉を図案化したもの。学内公募で選ばれた工学部学生の作品に修正を加え、 1956年（昭和31年）に制定された。「フェニックス」は灰の中から再生するとされる不死鳥で、原爆によって 廃墟となった広島の地に新たに生まれた大学を、再生・新しい生命の象徴として不死鳥になぞらえたもの。 フェニックスという名前を持つヤシ科植物の葉も図案に採用されている。"}, {"name": "北海道大学医学部", "path": "N/N_Hokkaido_alt.png", "origin": "シンボルマークは、キャンパス内に自生する「オオバナノエンレイソウ」（ユリ科トリリウム属の多年草）を 図案化したもの。1950年の公募による入選作をもとに、創基120周年を機に修正し、1996年（平成8年）に正式な シンボルマークとして決定された。花弁・がく片による六方向への広がりは、北海道大学から日本・世界へ向けて 情報を発信することを意味する。"}, {"name": "東京医科歯科大学", "path": "N/N_Ikashika.png", "origin": "旧東京医科歯科大学の伝統的エンブレムは、ベンゼン環を思わせる六角形の連なりが「醫」の字を囲む意匠。"}, {"name": "香川大学医学部", "path": "N/N_Kagawa.png", "origin": "シンボルマークは、地球規模のグローバルな展開を示す形状を採用。スクールカラーは、香川県の温暖な風土と オリーブをイメージしたグリーン。"}, {"name": "金沢大学医学部", "path": "N/N_Kanazawa.png", "origin": "1949年の新制・金沢大学誕生にあわせ、森田亀之助（当時の金沢美術工芸専門学校長）、森嘉紀（当時の同校 講師）、羽野禎三（当時の石川県立工芸高等学校長）の3氏に校章デザインを依頼し、3氏の合作によるデザインが 1949年8月に決定。地中海沿岸原産の植物「アカンサス」（和名「ハアザミ」）の葉と「大學」の文字を図案化した もの。アカンサスの花言葉は「the fine arts」で、その優雅な葉は古代ギリシャ・ローマで好まれ、コリント式や コンポジット式建築の柱頭装飾にも使われ、哲学者プラトン創設の学園「アカデメイア」の庭にも植えられていた と伝えられる。"}, {"name": "神戸大学医学部", "path": "N/N_Kobe.PNG", "origin": "ロゴマークは平成14年の創立百周年を機に制作。英文名「Kobe University」の頭文字「K」を2羽の鳥に象形化し、 それぞれが大きな軌跡（個性）を描きながら山や海を渡り、大空（世界）へと自由に羽ばたき、時には互いに 助け合いながら進みゆく様子を表現している。配色は、鳥を大学のシンボルカラー「ブリックカラー」とし、 緑は山、青は海をイメージ。"}, {"name": "高知大学医学部", "path": "N/N_Kochi.png", "origin": "2003年10月の高知大学と高知医科大学の統合を機に、新しい高知大学の学章を公募して制定。「Kochi」のKと 「University」のUを組み合わせた躍動的なデザインで、青は太平洋の波涛・黒潮、空色は若者の可能性と大空を 表す。新生高知大学が未来へ飛躍する姿を表現。制作者は大阪府大阪市の岩永光一氏。"}, {"name": "熊本大学医学部", "path": "N/N_Kumamoto.PNG", "origin": "「くまもと」の「く」と「Kumamoto」の「K」を図案化し、前進する矢印をイメージしている。"}, {"name": "大阪大学医学部", "path": "N/N_Kyoto.png", "origin": "現在の学章は、日本を代表するグラフィックデザイナー・田中一光氏によるもの。大阪大学創立60周年の1991年に 制定された。銀杏をモチーフとし、3つの円弧による造形の中に「OSAKA」の「O」を忍ばせている。60年間の伝統を 持つ銀杏を継承しながら、大学・学生・市民のつながりを表現した（戦前は「交差した二枚の銀杏の葉」を 校章としていた）。"}, {"name": "京都大学医学部", "path": "N/N_Kyoto_alt.png", "origin": "現行エンブレムは、吉田キャンパス時計台前のクスノキ（京都大学のシンボル）をモチーフにしたもの （銀杏ではない）。原型は1950年頃、庶務課職員・小川録郎氏が考案し「事務局シール」として使用されていた。 その後、工学部建築学科・川崎清教授と京都芸術短期大学・久谷政樹教授による意匠検討を経て、1990年11月16日 の評議会で正式なエンブレムとして了承された。創立年\"1897\"と大学名（英語）が添えられている。なお、古くは 「葵」のマーク（1949年、学生図案）も襟章として使われていた時期がある。"}, {"name": "九州大学医学部", "path": "N/N_Kyushu.png", "origin": "1949年、学生バッジの図案が学生70人・153点の応募の中から選ばれたのが伝統的エンブレムの原型。松の木・葉・ 松かさ・樹皮を図案化したものが多く応募され、当時の病院地区〜箱崎地区一帯に広がっていた松原の記憶が 多くの学生の心に残っていたことがうかがえる。現在のシンボルロゴは2004年、芸術工学研究院・芸術工学府の 教員・学生と広報室によるUIプロジェクトチームが新たに制定。"}, {"name": "宮崎大学医学部", "path": "N/N_Miyazaki.png", "origin": "シンボルマークは、大学の頭文字である「宮」をモチーフに図案化し、さらにそれを人の姿として擬人化した もの。白い丸は大学のイメージが徐々に拡大すること、緑の中の2つの丸は宮崎大学と宮崎医科大学の統合を 表す。全体として躍動する若者、地球、世界へ羽ばたく姿を表現。緑は宮崎の自然、青は空と海を表す。"}, {"name": "長崎大学医学部", "path": "N/N_Nagasaki.PNG", "origin": "シンボルマークは、鎖国時代に世界への文化の門戸となった長崎を象徴するオランダ船の舳先に、Nagasaki Universityの頭文字「NU」を重ね、右肩に「大學」の文字を配置したもの。1949年に、大学構成員の連帯意識を 高め、総合大学として発展するためのシンボルとして制定された。その後、国立大学法人化を機に2005年に正式 ロゴマークとして精緻化された。"}, {"name": "名古屋大学医学部", "path": "N/N_Nagoya.png", "origin": "現在の「名大マーク」は、従来の学章をリデザインし、ロゴタイプと組み合わせたもの。大学の国際化と情報 発信力の強化、ビジュアルイメージの統一を目的として制定された。スクールカラーの濃緑には「不屈・永遠」と 「若さ」の意味が込められている（学章そのものの図案の起源までは公式ページから確定できず）。"}, {"name": "新潟大学医学部", "path": "N/N_Niigata.png", "origin": "校章は雪の結晶をかたどったもの。昭和24年に制定された学生章をもとに、創立50周年を記念して小磯稔名誉 教授がデザインし、校章として制定された。新潟の雪国としての地域性を直接的に表現している。"}, {"name": "大分大学医学部", "path": "N/N_Oita.png", "origin": "「OITA」の「O」と「UNIVERSITY」の「U」をモチーフに、2つの円を組み合わせたデザイン。外側の青い円は、 大学が地域・国際社会へ向けて発展し続ける姿、中央の円は人々が集い学び、社会・文化的交流を行う大学 キャンパスを表す。青は知性・誠実・探究心・自立心、黄色は希望・成長・幸福を象徴する。"}, {"name": "岡山大学医学部", "path": "N/N_Okayama.png", "origin": "学章は、Okayamaの「O」とUniversityの「U」から形作られ、鳥のように未来に向かって羽ばたき、光り輝く岡山 大学の姿をイメージしたもの。創立50周年記念事業として公募し、マークデザイナー・宮崎利一氏、アート ディレクター・橋ヶ谷佳正教育学部教授による作品。平成11年（1999年）5月からシンボルマークとして使用開始、 平成24年（2012年）4月から正式に学章となった。"}, {"name": "琉球大学医学部", "path": "N/N_Ryukyus.png", "origin": "芭蕉の葉と羽根ペンのイメージが核。芭蕉の葉は「琉球諸島の伝統文化や自然」を、羽根ペンは「学問と自由」を 象徴し、両者の組み合わせが「人の和と宇宙」を表す丸い円にまとめられている。"}, {"name": "佐賀大学医学部", "path": "N/N_Saga.png", "origin": "学章は飛翔するカササギ、格調ある篆書体の「佐大」の文字と英文表記を組み合わせたデザイン。カササギは 佐賀平野に特有な鳥で佐賀県の県鳥、国の天然記念物にも指定されている。長い尾と黒白のコントラストが 個性的で美しく、大学キャンパスにも生息し親しまれている。"}, {"name": "滋賀医科大学", "path": "N/N_Shiga.png", "origin": "学章は、「さざ波の滋賀」の波と「一隅を照らす」光の波動を組み合わせたもの。外から中心へ向かう波は 「人々の医への期待」、中心から外へ向かう光の波は「人々の期待に返す答え」を表す。"}, {"name": "島根大学医学部", "path": "N/N_Shimane.png", "origin": "島根の「し」をモチーフに、3本のラインを学生・教職員・ステークホルダーの協働に見立て、人と自然、教育と 研究、地域と世界など、さまざまな要素を「島根大学」が起点となって編み込んでいく様子を表現。青色と黄土色は 日本海・宍道湖、中国山地の大地の恵みと、歴史や文化、産業を表す。縁結びの地に立地する総合大学として、 「知の結び」を社会へ広げ、共に発展していく決意が込められている。"}, {"name": "信州大学医学部", "path": "N/N_Shinshu.PNG", "origin": "信州大学の頭文字「S」と、信州の大空を舞う鳥を組み合わせたもの。3枚の羽は教育・研究・社会貢献を表し、 3色の緑には信州の自然、学生の成長、大学の発展への願いが込められている。"}, {"name": "東北大学医学部", "path": "N/N_Tohoku.png", "origin": "公式ロゴマークは仙台を象徴する植物「萩」をモチーフとする。世界に向かって大きく広がっていく動きを デザインし、キーワードとして「Creativity」「Global」「Tradition」を掲げる。（旧来は北斗七星をモチーフに した医学系研究科独自のロゴマークもあり、こちらは昭和45年〈1970年〉10月から用いられ、北極星のような 不動の真理を求め世人の道しるべとなろうとする理念を象徴する。）"}, {"name": "徳島大学医学部", "path": "N/N_Tokushima.png", "origin": "学章は「TOKUSHIMA」「UNIVERSITY」の頭文字であるTとUを基調にデザイン。背後の四角形は四国を表す。Uの 重なりは、大学の学術・教育の成果が地域・国際社会の発展に貢献し、知と文化が継承されていくことを象徴する。 色彩は、吉野川、徳島の青い空・海、徳島特産の藍をイメージしている。"}, {"name": "東京大学医学部", "path": "N/N_Tokyo.png", "origin": "現行の「東大マーク」の前身は1948年6月8日、評議会で「銀杏バッジ」として制定（星野昌一・第二工学部教授 作図）。当時は正式な校章ではなかった。2004年の国立大学法人化を機に、渡辺浩副学長を主任とする 「東京大学アイデンティティ作業班」が新たな「東大マーク」を制定。従来の2枚の銀杏の葉を踏襲しつつ、 上の葉を秋に色づく銀杏の黄、下の葉を東大のスクールカラー「淡青」にちなんだ青で配色。長い歴史と伝統を 踏まえ、世界の大学教育・学術研究をリードする決意を表す。"}, {"name": "鳥取大学医学部", "path": "N/N_Tottori.png", "origin": "シンボルマークは「Tottori University」の頭文字Tを、飛翔する鳥の姿に図案化したもの。中央で交差する 両翼は無限（∞）の可能性と「知と実践の融合」を表し、両翼と尾による3つの輪は教育研究上の3つの目標を 表す。青と緑は空・海・大地・生命など豊かな自然を象徴する。"}, {"name": "富山大学医学部", "path": "N/N_Toyama.png", "origin": "シンボルマークは、アルファベットの「T」と「U」をモチーフに、富山大学が大空・世界を飛翔するイメージを 表現。大きい楕円は国際社会を、小さい楕円は地域を表し、一体となって発展することを表現。土台の四角は 伝統性を示す。メインカラーのパール感のあるブルーグレーは、富山の豊かな自然の雪や水をイメージ。"}, {"name": "筑波大学医学部", "path": "N/N_Tsukuba.PNG", "origin": "校章「五三の桐葉型」は、1903年に改定された東京高等師範学校の生徒徽章に始まり、1949年の東京教育大学 学生バッジにも継承された。1974年、筑波大学評議会で「東京教育大学の伝統を引き継ぎ、桐の葉とする」ことが 決定され、校章となった。現在のデザインは1998〜1999年のCI計画で整理されたもの。"}, {"name": "鹿児島大学医学部", "path": "N/N_Unknown11.png", "origin": "学章は、鹿児島大学の頭文字Kをデザインし、今まさに飛び立とうとする鳳の形にしたもの。鹿児島大学で学んだ 卒業生が、大学を巣立って世界へ羽ばたく姿を象徴する。創立50周年記念協賛事業の一環として全国公募され、 494点の応募作品から決定された。"}, {"name": "山形大学医学部", "path": "N/N_Yamagata.png", "origin": "シンボルマークは、21世紀を迎えた平成13年、大学のさらなる発展と学生・教職員の一体感を高めるため公募で 制定。教育学部4年生だった千葉麻理子氏の作品を、当時の教育学部・和田直人准教授が補作したもの。"}, {"name": "山口大学医学部", "path": "N/N_Yamaguchi.png", "origin": "平成12年4月、新たな教育理念・目標「発見し・はぐくみ・かたちにする 知の広場」制定を機に、UI （University Identity）を表現するVI（シンボルマーク、ロゴマーク、スクールカラー等）の制定を山口大学 広報活動専門委員会が中心となって進め、平成16年1月に新シンボルマーク等を制定。シンボルマークは未来を まっすぐに見据えた顔を表現し、個性を大切にした教育・研究を育む学問の芽が世界に向かって大きく開いていく 様を表す。"}, {"name": "山梨大学医学部", "path": "N/N_Yamanashi.png", "origin": "たわわに実ったブドウと太陽を立体的に表現したもの。つながった円は「学問の融合」や、教育・研究成果が 地域・世界へ発信され、再び大学に戻る「循環的な相互関係」を表す。独立した円は輝く太陽と大学の理念を 象徴する。ブドウは生命・知識・文化の象徴でもある。"}, {"name": "弘前大学医学部", "path": "N/N_hirosaki.PNG", "origin": "弘前市を象徴する桜をモチーフとして、5学部の桜が集まり一つの大きな花を咲かせる姿を表現。中央の円は 地球を表し、5色は医学部・教育学部・農学生命科学部・理工学部・人文社会科学部の各学部カラーを表す。"}, {"name": "三重大学医学部", "path": "N/N_mie.PNG", "origin": "シンボルマークは緑の斜線が組み合わさった形。MIEの頭文字「M」、UNIVERSITYの頭文字「U」、本やノートを 開いたイメージ（「知」）、海や波のイメージ（キャンパスが海に続く特色を表す「地」）を組み合わせ、旧標章の 外形イメージも尊重して、三重大学教育学部・宮田修平教授（現名誉教授）が作製。2009年、学章とロゴを新たに 制定。"}, {"name": "防衛医科大学校", "path": "G/G_NationalDefenseMedicalCollege.png", "origin": "校章は、鳩・蛇杖・桜花・桜の若葉を組み合わせたもの。桜花は日本の国花、鳩は平和、蛇杖は医学の象徴を 意味する。それらを「国を守る若人」を象徴する桜の若葉が支えている。全体として、日本の独立と平和を守り ながら医学の研鑽に励むことを表現している。"}];
 const IMG_BASE = "https://b8ihua.com/idailogo/";
+const DATA_RAW = [{"name": "福島県立医科大学", "path": "Q/Q_Fukushima.png", "origin": "緑・サクラ・「F」の文字を組み合わせ、大学らしさを視覚化。立志哲洋氏（東京都）の作品。平成20年11月2日制定。", "yomi": "ふくしまけんりついかだいがく", "cat": "Q"}, {"name": "京都府立医科大学", "path": "Q/Q_Kyoto.png", "origin": "情報未確認（校章の具体的な意匠の由来は見当たらず）。1872年、東山・粟田口青蓮院に仮療病院を開設したのが起源。", "yomi": "きょうとふりついかだいがく", "cat": "Q"}, {"name": "名古屋市立大学医学部", "path": "Q/Q_Nagoya.png", "origin": "3種類のシンボルが存在。①学章：昭和25年（1950年）評議会で審議決定、公式な場で使用。②ハートマーク： 昭和34年（1959年）制作、医学研究科・薬学研究科由来の伝統を象徴、同窓会が使用。③NCUマーク：開学50周年 （2000年）記念に制作、他校との差別化・ブランディング用。シンボルカラー「エンジ色」は、強い意志・情熱、 不屈の精神、積み重ねる伝統を意識させる色。", "yomi": "なごやしりつだいがくいがくぶ", "cat": "Q"}, {"name": "奈良県立医科大学", "path": "Q/Q_Nara.png", "origin": "イニシャル「N」がモチーフ。二重の円弧は医学と看護学の支え合う関係を意味し、そこから伸びる葉形は医療人 としての成長・未来への飛躍をイメージ。「奈良県立医科大学の将来像」（H29年策定）の道しるべとして、 デザイン案を一般公募し制定。", "yomi": "ならけんりついかだいがく", "cat": "Q"}, {"name": "大阪公立大学医学部", "path": "Q/Q_Osaka.png", "origin": "シンボルマークの軸は「銀杏」「ヤシ」「桜」。大阪市立大学と大阪府立大学、大阪府と大阪市を象徴する3つの 伝統的シンボルが融合したもの。約140年間大阪を牽引してきた2大学の伝統と、公立大学として地域に根差した 教育・研究を続ける姿勢を示す。中心から伸びやかに花ひらくフォルムは「知の拠点」に人や知が結集し、世界へ 飛翔していく姿を表す。（参考：大阪府立大学（旧）は3枚の銀杏で3つの府立大学統合を、大阪市立大学は商神 マーキュリーの杖翼と市章「みをつくし」をモチーフにしていた）", "yomi": "おおさかこうりつだいがくいがくぶ", "cat": "Q"}, {"name": "札幌医科大学", "path": "Q/Q_Sapporo.png", "origin": "現シンボルマークは開学30周年（1980年）記念で制定。同窓会協力のもと学内・卒業生から図案を公募し、 「北海道デザイン界の父」栗谷川健一氏がデザイン。蛇の形は大学の頭文字「S」、下が太くなった杖は大地に 根を張る不動のたくましさを表す。北海道を象徴する「七光星」、飛躍と発展を示す「羽」、英知と質実を表す 「柏の葉」も描かれている。", "yomi": "さっぽろいかだいがく", "cat": "Q"}, {"name": "和歌山県立医科大学", "path": "Q/Q_Wakayama.png", "origin": "校章は、和歌山出身の医聖・華岡青洲が全身麻酔薬として用いた「まんだらげ（チョウセンアサガオ）」の花に 「医」の文字を組み合わせたもの。花の図案は陶芸家・富本憲吉が制作したもので、もともとは1963年（昭和38年） の医学総会のために描かれた。その後「医」の文字を加え、長く大学のマークとして使用され、1987年（昭和62年） に正式な校章として認定された。", "yomi": "わかやまけんりついかだいがく", "cat": "Q"}, {"name": "横浜市立大学医学部", "path": "Q/Q_Yokohama.png", "origin": "現行の校章（旧字体の「大学」の文字を取り囲む意匠）は1949年の新制大学発足以来使用。諸説あるが、 港横浜のイメージから「神奈川県の鳥」であるカモメ3羽を表しているとも言われる。 現行シンボルマーク（YCUの3文字を組み合わせたもの）は2005年4月の公立大学法人化を機に制定。全国公募27点の中から 選考委員会が選出、原案作者は当時神奈川県立川和高校3年生・豊浦万莉絵さん。光・輝く未来をイメージする色で、 学生の強い精神力・情熱・利他的な愛を象徴。", "yomi": "よこはましりつだいがくいがくぶ", "cat": "Q"}, {"name": "獨協医科大学", "path": "P/P_Dokkyo.png", "origin": "獨協グループ共通の「D」マークは、前身・獨逸学協会学校（1883年創立）の時代から使ってきたドイツの花文字 （ブラックレター体）の\"D\"を、よりシャープなデザインにリフレッシュしたもの。", "yomi": "どっきょういかだいがく", "cat": "P"}, {"name": "藤田医科大学", "path": "P/P_Fujita.png", "origin": "シンボルは、藤田学園の伝統的シンボルであった「プロミネンスマーク」が表す「太陽・大気・水」の要素を継承。 球体は昇りゆく太陽と建学の精神「独創一理」を象徴。ダイナミックな3本のラインは水をイメージするとともに 「教育」「研究」「医療・福祉」の3つの使命を表し、それを取り囲む背景は生命に不可欠な大気のように学園の 活動を支え続ける「経営」を表現。基本カラーは「フジタ ウィスタリア」（藤色）。", "yomi": "ふじたいかだいがく", "cat": "P"}, {"name": "福岡大学医学部", "path": "P/P_Fukuoka.png", "origin": "現行の校章は昭和59年（1984年）、創立50周年を機に制定。前身・福岡高等商業学校の校章をベースに、学部間の 強固な結束を9つの山形で示し「大学」の文字を囲む。基部に発祥学部（商学部）ゆかりの商業神マーキュリーの 翼を模し、国際化をめざす福岡大学のイニシャル「FU」を据え、燃えさかる向学の炬火を冠している。", "yomi": "ふくおかだいがくいがくぶ", "cat": "P"}, {"name": "兵庫医科大学", "path": "P/P_Hyogo.png", "origin": "HYOGOの頭文字「H」をモチーフに、「教育」「研究」「診療」「社会貢献」という4つの活動が重なり合って連携 する姿（円環）を表現。斜体の「H」はビジョンを実践する躍動を表す。2022年、開学50周年を機にUI （ユニバーシティ・アイデンティティ）を一新した際に制定。", "yomi": "ひょうごいかだいがく", "cat": "P"}, {"name": "国際医療福祉大学医学部", "path": "P/P_IUHW.png", "origin": "情報未確認。", "yomi": "こくさいいりょうふくしだいがくいがくぶ", "cat": "P"}, {"name": "自治医科大学", "path": "P/P_Jichi.png", "origin": "校章：昭和49年12月、学内公募の中から奥野正孝氏（三重県、1期生）の作品を選定。太い曲線は頭文字「J」と、 全国の都道府県が共同設立した特性を象徴する「日本列島」を意味し、中に「医大」の文字を配置。 シンボルマーク（平成2年制定）：中央に「自」の字、両側に構内に多い「松の木」をデザインし、学問の府を 本の形で表現。", "yomi": "じちいかだいがく", "cat": "P"}, {"name": "東京慈恵会医科大学", "path": "P/P_Jikei.png", "origin": "情報未確認（校章デザインの具体的な由来は見当たらず）。建学の精神は高木兼寛の遺訓「病気を診ずして病人を 診よ」。", "yomi": "とうきょうじけいかいいかだいがく", "cat": "P"}, {"name": "順天堂大学医学部", "path": "P/P_Juntendo.png", "origin": "校章は、学是である「仁」を意匠化したもの。順天堂に集う者すべてが目指す理念を表現。「A法人章」も同じく 「仁義礼智信」の「仁」を図案化したもので、明治初期の順天堂診察券や薬袋、佐藤尚中の肖像、医専の校章にも 使用されてきた。スクールカラーは「江戸紫」。", "yomi": "じゅんてんどうだいがくいがくぶ", "cat": "P"}, {"name": "関西医科大学", "path": "P/P_Kansai.png", "origin": "校章は「梅鉢（うめばち）」と呼ばれる梅の花の意匠に「医」の字を組み合わせたもの。意匠名は公式グッズ等で 「梅花梅鉢」として確認できるが、詳しい由来の説明文は公式サイト上には見当たらなかった。", "yomi": "かんさいいかだいがく", "cat": "P"}, {"name": "慶應義塾大学医学部", "path": "P/P_Keio.png", "origin": "ペンマークは、明治18年（1885年）頃、塾生が教科書中の一節「ペンは剣よりも強し」にヒントを得て、帽章と して自分たちで考案したのが始まり。慶應義塾が公式に制定したものではなく塾生有志のアイデアから生まれ、 歳月を経て公認された。1990年、大学紋章（エンブレム）が別途制定され、ペンマークと塾旗の色調を基調に、 ラテン語 \"Calamvs Gladio Fortior\"（ペンは剣より強し）などで構成されている。", "yomi": "けいおうぎじゅくだいがくいがくぶ", "cat": "P"}, {"name": "近畿大学医学部", "path": "P/P_Kindai.png", "origin": "学園章（校章）は、学園花である梅の花弁をモチーフ。「梅花霜雪を経て開く」（自然の厳しさを経て、春いちばん 品格高き花が咲きひらく）という思いを象徴。5つの花弁と中心の花芯で「大学」の「大」の字と「人」そのものを 表現し、大学の現在・未来に向かっての存在と位置をかたどる。花弁の一部が離れているのは未来志向に基づく 内面の未完、さらなる充溢・完熟を目指す形姿を表す。平成2年6月、創立65周年を記念して学園シンボルマークとして 制定。", "yomi": "きんきだいがくいがくぶ", "cat": "P"}, {"name": "北里大学医学部", "path": "P/P_Kitasato.png", "origin": "学祖・北里柴三郎の建学の精神「開拓」（科学者としてのパイオニア精神）「報恩」（社会への感謝と貢献） 「叡智と実践」「不撓不屈」に由来。盾型エンブレムの「KITASATO UNIV.」文字と意匠は、この精神を象徴する 伝統的な校章として使われている。", "yomi": "きたさとだいがくいがくぶ", "cat": "P"}, {"name": "久留米大学医学部", "path": "P/P_Kurume.png", "origin": "久留米大学の「久」の字をモチーフにした未来的な表現。本来\"変わらない\"という意味を持つ「久」を用いることで、 創立時の理念や役割を継承しつつ永続的な発展を表現。「久」を形作る円は豊かな人間性とグローバルな視野を 表し、5つの円は現在の5学部を表す。2008年制定、2009年商標登録。", "yomi": "くるめだいがくいがくぶ", "cat": "P"}, {"name": "杏林大学医学部", "path": "P/P_Kyorin.png", "origin": "「杏林」の名は、後漢時代の名医・董奉（とうほう）が治療費の代わりに患者に杏の木を植えさせ、やがて林と なったという故事に由来し、「良医」「社会への貢献」を意味する語。 シンボルマーク（2006年制定）は、建学の精神「真・善・美の探究」の3要素を三角形の3つの角で表現。安定した 不変の角が「真」、豊かな曲線に囲まれた角が「善」、天空に伸びる曲線の角が「美」、そして新しい風が「杏林」 の意味する社会貢献を表す。", "yomi": "きょうりんだいがくいがくぶ", "cat": "P"}, {"name": "日本医科大学", "path": "P/P_NipponMedicalSchool.png", "origin": "現行エンブレムは、ギリシャ神話由来のアスクレピオスの杖（医療の象徴）と「NMS」の文字を組み合わせたもの。", "yomi": "にっぽんいかだいがく", "cat": "P"}, {"name": "大阪医科薬科大学", "path": "P/P_OMPU.PNG", "origin": "「大阪医科薬科大学」のイニシャル「O」と英文頭文字「OMPU」がもとになっている。「O」を模した上部デザインは ハートをイメージし生命の躍動を表現。2色の「O」の重なりには『大阪医科大学と大阪薬科大学の統合による医療の 発展』の意味が込められている。「ひとに寄り添うまごころ」とその基盤となる「高度な教育・研究」を表す。 2021年4月の大学統合にあたり制定。", "yomi": "おおさかいかやっかだいがく", "cat": "P"}, {"name": "埼玉医科大学", "path": "P/P_Saitama.png", "origin": "校章：「大學」の文字を支える三個の巴形は、大学名に冠している埼玉の象徴である勾玉を表す。勾玉は埼玉県章 にも用いられ、\"魂、中心、円満\"を意味するといわれている。（記念誌「創立十年のあゆみ」より）", "yomi": "さいたまいかだいがく", "cat": "P"}, {"name": "産業医科大学", "path": "P/P_Sangyo.png", "origin": "9つの円を「人・企業・社会」に見立て、「人の健康」が「企業の健康」をつくり、それが「社会の健康」に つながるという考え方をロゴ化したもの。", "yomi": "さんぎょういかだいがく", "cat": "P"}, {"name": "昭和医科大学", "path": "P/P_Showa.png", "origin": "校章は百合の花に「昭大」の文字を組み合わせたもの。百合は純潔、謙虚さ、優しい心、美のシンボルとされる。", "yomi": "しょうわいかだいがく", "cat": "P"}, {"name": "聖マリアンナ医科大学", "path": "P/P_StMarianna.png", "origin": "情報未確認（校章デザイン自体の由来は見当たらず）。建学の精神は「キリスト教的人類愛に根ざした生命の 尊厳」。", "yomi": "せいまりあんないかだいがく", "cat": "P"}, {"name": "帝京大学医学部", "path": "P/P_Teikyo.png", "origin": "学章は、蔦（つた）の葉がモチーフ。縦書きの「大學」の文字の両脇に蔦の葉を垂らしたデザイン。 シンボルマーク（創立50周年・2016年制定）は、「TEIKYO」のイニシャル「T」を3つの楕円で図案化。3つの 楕円は垣根を超えてはばたく学生たちを表し、同時に教育指針「実学」「国際性」「開放性」をシンボライズ。 中央の白い楕円は学生たちの未知なる力を表現。", "yomi": "ていきょうだいがくいがくぶ", "cat": "P"}, {"name": "東北医科薬科大学", "path": "P/P_Tohokuika.png", "origin": "ロゴマークに表示されている6つの星は東北6県を表し、地域社会とのさらなる協働を願う気持ちが込められている。", "yomi": "とうほくいかやっかだいがく", "cat": "P"}, {"name": "東海大学医学部", "path": "P/P_Tokai.png", "origin": "学園の校章には波と翼がデザインされ、洋々とした大海（太平洋）と、それを俯瞰して悠然と翼を広げ飛翔する かもめを表す。「東海」はアジア東の太平洋を意味し、太平洋のように大きく豊かな心、広い視野を育みたいと いう願いが込められている。", "yomi": "とうかいだいがくいがくぶ", "cat": "P"}, {"name": "東京女子医科大学", "path": "P/P_TokyoWomens.png", "origin": "情報未確認。円形の中に「TWMU」の文字、周囲に薔薇の意匠。", "yomi": "とうきょうじょしいかだいがく", "cat": "P"}, {"name": "愛知医科大学", "path": "P/P_aichiika.PNG", "origin": "校章は、常緑樹「橘（たちばな）」がモチーフ。橘は京都御所で「右近の橘」として珍重され、文化勲章の デザインにもなっている。中国の故事では、橘の葉と井戸水で疫病患者を治療したとされ、後に「橘井 （きっせい）」という語が医師を意味する言葉として使われるようになった。橘の力強い意気をもって世界人類の 幸福に貢献するという思いが込められている。全体構成は愛知の「A」を基本形に、医科の「I」「K」、 「人」の文字をイメージし、医療メスと水平線に見立てたラインは地域に貢献する医療のあり方を表現。", "yomi": "あいちいかだいがく", "cat": "P"}, {"name": "岩手医科大学", "path": "P/P_iwateidai.PNG", "origin": "校章の由来：「𨭎」（えい／医術を表す）と「巫」（みこ／神意をうけた治療者を表す）の会意文字、そして 「大」（大学）を図案化したもの。医療の起源の古さと医学者としての心構えを示す。 現行シンボルマークは、岩手山をモチーフに「Iwate」の「i」と「Medical」の「m」を図案化。3学部を3本の ストライプ（𨭎・巫・大）で表し、上の楕円は未来を表現。", "yomi": "いわていかだいがく", "cat": "P"}, {"name": "金沢医科大学", "path": "P/P_kanazawaidai.png", "origin": "校章は「橘（たちばな）」の葉と実を図案化したもの。中国の故事『神仙伝』にちなむもので、後漢の名医・ 董奉の故事（「杏林」の由来と同系統の逸話）を意訳したもの。愛知医科大学の校章にも通じる、医師を 指す言葉「橘井（きっせい）」の伝承に基づく。", "yomi": "かなざわいかだいがく", "cat": "P"}, {"name": "川崎医科大学", "path": "P/P_kawasaki.png", "origin": "シンボルマークは2つの柔らかな形で構成され、人が寄り添う形を抽象化したもの。デザインコンセプトは \"assist\"（ラテン語 \"ad sisto\"＝「傍らに立つ」に由来）で、川崎学園の成果領域である教育・医療・福祉の 基本姿勢を表す。同時に学園の頭文字「K」も表している。統一カラーのブルーは、やさしさ、信頼、清潔感を象徴。 平成18年（2006年）12月制定。", "yomi": "かわさきいかだいがく", "cat": "P"}, {"name": "日本大学医学部", "path": "P/P_nichidai.png", "origin": "明治36年（1903年）の制服制帽制定時に徽章も制定。校名の「日本」にちなみ、国花とされた桜を図案化。 校歌にも「朝日と輝く国の名負いて」とある。現在は「自主創造」を示す新ロゴマーク「Nドット」も制定され、 ロゴカラーは緋色（NICHIDAI RED）。", "yomi": "にほんだいがくいがくぶ", "cat": "P"}, {"name": "東邦大学医学部", "path": "P/P_toho2.PNG", "origin": "シンボルマークは、建学の精神「自然・生命・人間」をかたちにしたもの。自然、生命、人間をモチーフにした 12種類のアイコンが集まり青い地球を構成し、自然や生命との調和・共生、助け合い、愛によって結ばれる世界観 を表す。この建学の精神は創立者・額田晉の著書『自然・生命・人間』に由来（英語では\"NATURE LIFE MAN\"）。", "yomi": "とうほうだいがくいがくぶ", "cat": "P"}, {"name": "東京医科大学", "path": "P/P_tokyoidai.png", "origin": "校章は、東京医学専門学校時代より「醫」の旧漢字の裾を丸くした形。創学運動の学生会本部先輩の帽章に原型が 見られる。この独特の丸い形は弾丸を表現し、学生団が一丸となる意味が込められているとも言われる。 スクールカラーの臙脂色は、血署連判状の血判に最も近い色だからとも伝えられる。", "yomi": "とうきょういかだいがく", "cat": "P"}, {"name": "秋田大学医学部", "path": "N/N_Akita.png", "origin": "前身である秋田鉱山専門学校の校章に使われていた「ダイヤモンドの正八面体」をオマージュしたもので、 ダイヤモンドのブリリアントカットをモチーフに作成。磨き上げることでその輝きを最大限に引き出すダイヤモンド になぞらえ、教育と研究を通じて学生を育成し課題解決の知識とスキルを磨き上げる姿勢、多面的な美しさから 多様な視点を持つグローバルなリーダー育成の理念を象徴する。", "yomi": "あきただいがくいがくぶ", "cat": "N"}, {"name": "旭川医科大学", "path": "N/N_Asahikawa.png", "origin": "旭川医科大学のイニシャル「A」をストライプで図案化。右上がりに跳ねる様は、豊かな自然の旭川から医療人 及び研究者を育成し、地域に根ざした医療及び福祉のさらなる向上（発信）を表現。薄紫はラベンダーの景観や 医療の英知・国際貢献、緑は再生や生命の輝きを意味する。", "yomi": "あさひかわいかだいがく", "cat": "N"}, {"name": "千葉大学医学部", "path": "N/N_Chiba.png", "origin": "学章（八角形の赤いマーク）は昭和24年（1949年）10月、赤穴宏氏（元千葉大学名誉教授）がデザイン。 Chiba Daigakuの頭文字「C」「D」を組み合わせ、千葉大学の「千」を配して構成。輪郭は無限の生命力を象徴する 「植物の種子」をかたどっている。左側のガーネット（えんじ）色は情熱を、右側の白色は純粋を表現。長年 「シンボルマーク」として使われてきたが、2013年3月に正式に「学章」として制定された。", "yomi": "ちばだいがくいがくぶ", "cat": "N"}, {"name": "愛媛大学医学部", "path": "N/N_Ehime.png", "origin": "ブランドマークは、「地域とともに輝く大学」を目指す愛媛大学が「愛媛の知の拠点（ドット・エヒメ）」と なることを決意表明。左の円は太陽を、右の「e」は躍動する姿を、全体はすこやかに伸びていく新芽を表す。 愛媛みかんを連想させる黄色は明朗さ・快活さの象徴。ロゴタイプは、「愛媛」という画数の多い漢字を シンプルに見せるため、和文・欧文ともにシャープなフォルムで構成。", "yomi": "えひめだいがくいがくぶ", "cat": "N"}, {"name": "福井大学医学部", "path": "N/N_Fukui.png", "origin": "学章は、二つの円が結びつき無限大（インフィニティ）の形を形成したもの。それらの円は統合前の「福井大学と 福井医科大学」、また「科学と技術」を表し、無限大は新大学の可能性を表現している。中央の反転部には福井 大学の頭文字「f」を表出。色は「福井の美しい海と空」「若さと知性」を表す。2003年の旧福井大学・旧福井 医科大学統合を機に学内外から公募し、2004年10月制定。", "yomi": "ふくいだいがくいがくぶ", "cat": "N"}, {"name": "岐阜大学医学部", "path": "N/N_Gifu.png", "origin": "学章は、鵜舟と篝火を意味する。篝火は「学問」、舟は「人類の幸福」を象徴するとされる。また、陰陽2体の 組み合わせは天地自然、存在と活動の調和・バランスを表す。黒とオレンジは意志と情熱、感性の豊かさと品位を 表現する。さらに、学章は弓と組み合わさって「G」を形成している。", "yomi": "ぎふだいがくいがくぶ", "cat": "N"}, {"name": "群馬大学医学部", "path": "N/N_Gumma.png", "origin": "群馬大学の英頭文字「G」をモチーフに、緑と青で豊かな自然環境を表現。学生の成長・活躍、新しい未来の 創造、社会への貢献をイメージしている。", "yomi": "ぐんまだいがくいがくぶ", "cat": "N"}, {"name": "浜松医科大学", "path": "N/N_Hamamatsu.png", "origin": "本学のローマ字での頭文字「h」をデザイン化。水色部分が遠州灘（下部分の曲線）、浜名湖の水面、浜松から 望む富士山（右上の突起）で浜松の特色を、全体の曲線が生命の源である自然な水のゆらぎ、医療の重要 キーワード「生命」を表現。オレンジ色の丸と水色部分の両方を合わせて全体を見ると、元気・健康・躍動を 表現した人（丸を頭、水色の両端を手に見立てる）に見え、人類の健康と福祉に貢献することをイメージしている。", "yomi": "はままついかだいがく", "cat": "N"}, {"name": "広島大学医学部", "path": "N/N_Hiroshima.png", "origin": "学章は、清新な生命とフェニックスの葉を図案化したもの。学内公募で選ばれた工学部学生の作品に修正を加え、 1956年（昭和31年）に制定された。「フェニックス」は灰の中から再生するとされる不死鳥で、原爆によって 廃墟となった広島の地に新たに生まれた大学を、再生・新しい生命の象徴として不死鳥になぞらえたもの。 フェニックスという名前を持つヤシ科植物の葉も図案に採用されている。", "yomi": "ひろしまだいがくいがくぶ", "cat": "N"}, {"name": "北海道大学医学部", "path": "N/N_Hokkaido_alt.png", "origin": "シンボルマークは、キャンパス内に自生する「オオバナノエンレイソウ」（ユリ科トリリウム属の多年草）を 図案化したもの。1950年の公募による入選作をもとに、創基120周年を機に修正し、1996年（平成8年）に正式な シンボルマークとして決定された。花弁・がく片による六方向への広がりは、北海道大学から日本・世界へ向けて 情報を発信することを意味する。", "yomi": "ほっかいどうだいがくいがくぶ", "cat": "N"}, {"name": "東京医科歯科大学", "path": "N/N_Ikashika.png", "origin": "旧東京医科歯科大学の伝統的エンブレムは、ベンゼン環を思わせる六角形の連なりが「醫」の字を囲む意匠。", "yomi": "とうきょういかしかだいがく", "cat": "N"}, {"name": "香川大学医学部", "path": "N/N_Kagawa.png", "origin": "シンボルマークは、地球規模のグローバルな展開を示す形状を採用。スクールカラーは、香川県の温暖な風土と オリーブをイメージしたグリーン。", "yomi": "かがわだいがくいがくぶ", "cat": "N"}, {"name": "金沢大学医学部", "path": "N/N_Kanazawa.png", "origin": "1949年の新制・金沢大学誕生にあわせ、森田亀之助（当時の金沢美術工芸専門学校長）、森嘉紀（当時の同校 講師）、羽野禎三（当時の石川県立工芸高等学校長）の3氏に校章デザインを依頼し、3氏の合作によるデザインが 1949年8月に決定。地中海沿岸原産の植物「アカンサス」（和名「ハアザミ」）の葉と「大學」の文字を図案化した もの。アカンサスの花言葉は「the fine arts」で、その優雅な葉は古代ギリシャ・ローマで好まれ、コリント式や コンポジット式建築の柱頭装飾にも使われ、哲学者プラトン創設の学園「アカデメイア」の庭にも植えられていた と伝えられる。", "yomi": "かなざわだいがくいがくぶ", "cat": "N"}, {"name": "神戸大学医学部", "path": "N/N_Kobe.PNG", "origin": "ロゴマークは平成14年の創立百周年を機に制作。英文名「Kobe University」の頭文字「K」を2羽の鳥に象形化し、 それぞれが大きな軌跡（個性）を描きながら山や海を渡り、大空（世界）へと自由に羽ばたき、時には互いに 助け合いながら進みゆく様子を表現している。配色は、鳥を大学のシンボルカラー「ブリックカラー」とし、 緑は山、青は海をイメージ。", "yomi": "こうべだいがくいがくぶ", "cat": "N"}, {"name": "高知大学医学部", "path": "N/N_Kochi.png", "origin": "2003年10月の高知大学と高知医科大学の統合を機に、新しい高知大学の学章を公募して制定。「Kochi」のKと 「University」のUを組み合わせた躍動的なデザインで、青は太平洋の波涛・黒潮、空色は若者の可能性と大空を 表す。新生高知大学が未来へ飛躍する姿を表現。制作者は大阪府大阪市の岩永光一氏。", "yomi": "こうちだいがくいがくぶ", "cat": "N"}, {"name": "熊本大学医学部", "path": "N/N_Kumamoto.PNG", "origin": "「くまもと」の「く」と「Kumamoto」の「K」を図案化し、前進する矢印をイメージしている。", "yomi": "くまもとだいがくいがくぶ", "cat": "N"}, {"name": "大阪大学医学部", "path": "N/N_Kyoto.png", "origin": "現在の学章は、日本を代表するグラフィックデザイナー・田中一光氏によるもの。大阪大学創立60周年の1991年に 制定された。銀杏をモチーフとし、3つの円弧による造形の中に「OSAKA」の「O」を忍ばせている。60年間の伝統を 持つ銀杏を継承しながら、大学・学生・市民のつながりを表現した（戦前は「交差した二枚の銀杏の葉」を 校章としていた）。", "yomi": "おおさかだいがくいがくぶ", "cat": "N"}, {"name": "京都大学医学部", "path": "N/N_Kyoto_alt.png", "origin": "現行エンブレムは、吉田キャンパス時計台前のクスノキ（京都大学のシンボル）をモチーフにしたもの （銀杏ではない）。原型は1950年頃、庶務課職員・小川録郎氏が考案し「事務局シール」として使用されていた。 その後、工学部建築学科・川崎清教授と京都芸術短期大学・久谷政樹教授による意匠検討を経て、1990年11月16日 の評議会で正式なエンブレムとして了承された。創立年\"1897\"と大学名（英語）が添えられている。なお、古くは 「葵」のマーク（1949年、学生図案）も襟章として使われていた時期がある。", "yomi": "きょうとだいがくいがくぶ", "cat": "N"}, {"name": "九州大学医学部", "path": "N/N_Kyushu.png", "origin": "1949年、学生バッジの図案が学生70人・153点の応募の中から選ばれたのが伝統的エンブレムの原型。松の木・葉・ 松かさ・樹皮を図案化したものが多く応募され、当時の病院地区〜箱崎地区一帯に広がっていた松原の記憶が 多くの学生の心に残っていたことがうかがえる。現在のシンボルロゴは2004年、芸術工学研究院・芸術工学府の 教員・学生と広報室によるUIプロジェクトチームが新たに制定。", "yomi": "きゅうしゅうだいがくいがくぶ", "cat": "N"}, {"name": "宮崎大学医学部", "path": "N/N_Miyazaki.png", "origin": "シンボルマークは、大学の頭文字である「宮」をモチーフに図案化し、さらにそれを人の姿として擬人化した もの。白い丸は大学のイメージが徐々に拡大すること、緑の中の2つの丸は宮崎大学と宮崎医科大学の統合を 表す。全体として躍動する若者、地球、世界へ羽ばたく姿を表現。緑は宮崎の自然、青は空と海を表す。", "yomi": "みやざきだいがくいがくぶ", "cat": "N"}, {"name": "長崎大学医学部", "path": "N/N_Nagasaki.PNG", "origin": "シンボルマークは、鎖国時代に世界への文化の門戸となった長崎を象徴するオランダ船の舳先に、Nagasaki Universityの頭文字「NU」を重ね、右肩に「大學」の文字を配置したもの。1949年に、大学構成員の連帯意識を 高め、総合大学として発展するためのシンボルとして制定された。その後、国立大学法人化を機に2005年に正式 ロゴマークとして精緻化された。", "yomi": "ながさきだいがくいがくぶ", "cat": "N"}, {"name": "名古屋大学医学部", "path": "N/N_Nagoya.png", "origin": "現在の「名大マーク」は、従来の学章をリデザインし、ロゴタイプと組み合わせたもの。大学の国際化と情報 発信力の強化、ビジュアルイメージの統一を目的として制定された。スクールカラーの濃緑には「不屈・永遠」と 「若さ」の意味が込められている（学章そのものの図案の起源までは公式ページから確定できず）。", "yomi": "なごやだいがくいがくぶ", "cat": "N"}, {"name": "新潟大学医学部", "path": "N/N_Niigata.png", "origin": "校章は雪の結晶をかたどったもの。昭和24年に制定された学生章をもとに、創立50周年を記念して小磯稔名誉 教授がデザインし、校章として制定された。新潟の雪国としての地域性を直接的に表現している。", "yomi": "にいがただいがくいがくぶ", "cat": "N"}, {"name": "大分大学医学部", "path": "N/N_Oita.png", "origin": "「OITA」の「O」と「UNIVERSITY」の「U」をモチーフに、2つの円を組み合わせたデザイン。外側の青い円は、 大学が地域・国際社会へ向けて発展し続ける姿、中央の円は人々が集い学び、社会・文化的交流を行う大学 キャンパスを表す。青は知性・誠実・探究心・自立心、黄色は希望・成長・幸福を象徴する。", "yomi": "おおいただいがくいがくぶ", "cat": "N"}, {"name": "岡山大学医学部", "path": "N/N_Okayama.png", "origin": "学章は、Okayamaの「O」とUniversityの「U」から形作られ、鳥のように未来に向かって羽ばたき、光り輝く岡山 大学の姿をイメージしたもの。創立50周年記念事業として公募し、マークデザイナー・宮崎利一氏、アート ディレクター・橋ヶ谷佳正教育学部教授による作品。平成11年（1999年）5月からシンボルマークとして使用開始、 平成24年（2012年）4月から正式に学章となった。", "yomi": "おかやまだいがくいがくぶ", "cat": "N"}, {"name": "琉球大学医学部", "path": "N/N_Ryukyus.png", "origin": "芭蕉の葉と羽根ペンのイメージが核。芭蕉の葉は「琉球諸島の伝統文化や自然」を、羽根ペンは「学問と自由」を 象徴し、両者の組み合わせが「人の和と宇宙」を表す丸い円にまとめられている。", "yomi": "りゅうきゅうだいがくいがくぶ", "cat": "N"}, {"name": "佐賀大学医学部", "path": "N/N_Saga.png", "origin": "学章は飛翔するカササギ、格調ある篆書体の「佐大」の文字と英文表記を組み合わせたデザイン。カササギは 佐賀平野に特有な鳥で佐賀県の県鳥、国の天然記念物にも指定されている。長い尾と黒白のコントラストが 個性的で美しく、大学キャンパスにも生息し親しまれている。", "yomi": "さがだいがくいがくぶ", "cat": "N"}, {"name": "滋賀医科大学", "path": "N/N_Shiga.png", "origin": "学章は、「さざ波の滋賀」の波と「一隅を照らす」光の波動を組み合わせたもの。外から中心へ向かう波は 「人々の医への期待」、中心から外へ向かう光の波は「人々の期待に返す答え」を表す。", "yomi": "しがいかだいがく", "cat": "N"}, {"name": "島根大学医学部", "path": "N/N_Shimane.png", "origin": "島根の「し」をモチーフに、3本のラインを学生・教職員・ステークホルダーの協働に見立て、人と自然、教育と 研究、地域と世界など、さまざまな要素を「島根大学」が起点となって編み込んでいく様子を表現。青色と黄土色は 日本海・宍道湖、中国山地の大地の恵みと、歴史や文化、産業を表す。縁結びの地に立地する総合大学として、 「知の結び」を社会へ広げ、共に発展していく決意が込められている。", "yomi": "しまねだいがくいがくぶ", "cat": "N"}, {"name": "信州大学医学部", "path": "N/N_Shinshu.PNG", "origin": "信州大学の頭文字「S」と、信州の大空を舞う鳥を組み合わせたもの。3枚の羽は教育・研究・社会貢献を表し、 3色の緑には信州の自然、学生の成長、大学の発展への願いが込められている。", "yomi": "しんしゅうだいがくいがくぶ", "cat": "N"}, {"name": "東北大学医学部", "path": "N/N_Tohoku.png", "origin": "公式ロゴマークは仙台を象徴する植物「萩」をモチーフとする。世界に向かって大きく広がっていく動きを デザインし、キーワードとして「Creativity」「Global」「Tradition」を掲げる。（旧来は北斗七星をモチーフに した医学系研究科独自のロゴマークもあり、こちらは昭和45年〈1970年〉10月から用いられ、北極星のような 不動の真理を求め世人の道しるべとなろうとする理念を象徴する。）", "yomi": "とうほくだいがくいがくぶ", "cat": "N"}, {"name": "徳島大学医学部", "path": "N/N_Tokushima.png", "origin": "学章は「TOKUSHIMA」「UNIVERSITY」の頭文字であるTとUを基調にデザイン。背後の四角形は四国を表す。Uの 重なりは、大学の学術・教育の成果が地域・国際社会の発展に貢献し、知と文化が継承されていくことを象徴する。 色彩は、吉野川、徳島の青い空・海、徳島特産の藍をイメージしている。", "yomi": "とくしまだいがくいがくぶ", "cat": "N"}, {"name": "東京大学医学部", "path": "N/N_Tokyo.png", "origin": "現行の「東大マーク」の前身は1948年6月8日、評議会で「銀杏バッジ」として制定（星野昌一・第二工学部教授 作図）。当時は正式な校章ではなかった。2004年の国立大学法人化を機に、渡辺浩副学長を主任とする 「東京大学アイデンティティ作業班」が新たな「東大マーク」を制定。従来の2枚の銀杏の葉を踏襲しつつ、 上の葉を秋に色づく銀杏の黄、下の葉を東大のスクールカラー「淡青」にちなんだ青で配色。長い歴史と伝統を 踏まえ、世界の大学教育・学術研究をリードする決意を表す。", "yomi": "とうきょうだいがくいがくぶ", "cat": "N"}, {"name": "鳥取大学医学部", "path": "N/N_Tottori.png", "origin": "シンボルマークは「Tottori University」の頭文字Tを、飛翔する鳥の姿に図案化したもの。中央で交差する 両翼は無限（∞）の可能性と「知と実践の融合」を表し、両翼と尾による3つの輪は教育研究上の3つの目標を 表す。青と緑は空・海・大地・生命など豊かな自然を象徴する。", "yomi": "とっとりだいがくいがくぶ", "cat": "N"}, {"name": "富山大学医学部", "path": "N/N_Toyama.png", "origin": "シンボルマークは、アルファベットの「T」と「U」をモチーフに、富山大学が大空・世界を飛翔するイメージを 表現。大きい楕円は国際社会を、小さい楕円は地域を表し、一体となって発展することを表現。土台の四角は 伝統性を示す。メインカラーのパール感のあるブルーグレーは、富山の豊かな自然の雪や水をイメージ。", "yomi": "とやまだいがくいがくぶ", "cat": "N"}, {"name": "筑波大学医学部", "path": "N/N_Tsukuba.PNG", "origin": "校章「五三の桐葉型」は、1903年に改定された東京高等師範学校の生徒徽章に始まり、1949年の東京教育大学 学生バッジにも継承された。1974年、筑波大学評議会で「東京教育大学の伝統を引き継ぎ、桐の葉とする」ことが 決定され、校章となった。現在のデザインは1998〜1999年のCI計画で整理されたもの。", "yomi": "つくばだいがくいがくぶ", "cat": "N"}, {"name": "鹿児島大学医学部", "path": "N/N_Unknown11.png", "origin": "学章は、鹿児島大学の頭文字Kをデザインし、今まさに飛び立とうとする鳳の形にしたもの。鹿児島大学で学んだ 卒業生が、大学を巣立って世界へ羽ばたく姿を象徴する。創立50周年記念協賛事業の一環として全国公募され、 494点の応募作品から決定された。", "yomi": "かごしまだいがくいがくぶ", "cat": "N"}, {"name": "山形大学医学部", "path": "N/N_Yamagata.png", "origin": "シンボルマークは、21世紀を迎えた平成13年、大学のさらなる発展と学生・教職員の一体感を高めるため公募で 制定。教育学部4年生だった千葉麻理子氏の作品を、当時の教育学部・和田直人准教授が補作したもの。", "yomi": "やまがただいがくいがくぶ", "cat": "N"}, {"name": "山口大学医学部", "path": "N/N_Yamaguchi.png", "origin": "平成12年4月、新たな教育理念・目標「発見し・はぐくみ・かたちにする 知の広場」制定を機に、UI （University Identity）を表現するVI（シンボルマーク、ロゴマーク、スクールカラー等）の制定を山口大学 広報活動専門委員会が中心となって進め、平成16年1月に新シンボルマーク等を制定。シンボルマークは未来を まっすぐに見据えた顔を表現し、個性を大切にした教育・研究を育む学問の芽が世界に向かって大きく開いていく 様を表す。", "yomi": "やまぐちだいがくいがくぶ", "cat": "N"}, {"name": "山梨大学医学部", "path": "N/N_Yamanashi.png", "origin": "たわわに実ったブドウと太陽を立体的に表現したもの。つながった円は「学問の融合」や、教育・研究成果が 地域・世界へ発信され、再び大学に戻る「循環的な相互関係」を表す。独立した円は輝く太陽と大学の理念を 象徴する。ブドウは生命・知識・文化の象徴でもある。", "yomi": "やまなしだいがくいがくぶ", "cat": "N"}, {"name": "弘前大学医学部", "path": "N/N_hirosaki.PNG", "origin": "弘前市を象徴する桜をモチーフとして、5学部の桜が集まり一つの大きな花を咲かせる姿を表現。中央の円は 地球を表し、5色は医学部・教育学部・農学生命科学部・理工学部・人文社会科学部の各学部カラーを表す。", "yomi": "ひろさきだいがくいがくぶ", "cat": "N"}, {"name": "三重大学医学部", "path": "N/N_mie.PNG", "origin": "シンボルマークは緑の斜線が組み合わさった形。MIEの頭文字「M」、UNIVERSITYの頭文字「U」、本やノートを 開いたイメージ（「知」）、海や波のイメージ（キャンパスが海に続く特色を表す「地」）を組み合わせ、旧標章の 外形イメージも尊重して、三重大学教育学部・宮田修平教授（現名誉教授）が作製。2009年、学章とロゴを新たに 制定。", "yomi": "みえだいがくいがくぶ", "cat": "N"}, {"name": "防衛医科大学校", "path": "G/G_NationalDefenseMedicalCollege.png", "origin": "校章は、鳩・蛇杖・桜花・桜の若葉を組み合わせたもの。桜花は日本の国花、鳩は平和、蛇杖は医学の象徴を 意味する。それらを「国を守る若人」を象徴する桜の若葉が支えている。全体として、日本の独立と平和を守り ながら医学の研鑽に励むことを表現している。", "yomi": "ぼうえいいかだいがっこう", "cat": "G"}];
+const DATA = DATA_RAW.map(d => Object.assign({}, d, {img: IMG_BASE + d.path}));
 
+const CAT_LABELS = { ALL:"すべて", N:"国立医大", Q:"公立医大", P:"私立医大", G:"官立医大" };
+const CAT_ORDER = ["ALL","N","Q","P","G"];
+
+let selectedCat = "ALL";
 let order = [];
 let current = 0;
 let score = 0;
 let answered = false;
+let studyPool = [];
 
 function shuffle(arr){
   const a = arr.slice();
@@ -303,15 +429,36 @@ function shuffle(arr){
   return a;
 }
 
+const collator = new Intl.Collator('ja');
+const SORTED_INDEX = DATA
+  .map((d,i)=>i)
+  .sort((a,b)=> collator.compare(DATA[a].yomi || DATA[a].name, DATA[b].yomi || DATA[b].name));
+
+function poolForCat(cat){
+  if(cat === "ALL") return SORTED_INDEX.slice();
+  return SORTED_INDEX.filter(i => DATA[i].cat === cat);
+}
+
 const els = {
   home: document.getElementById('home'),
   quiz: document.getElementById('quiz'),
   result: document.getElementById('result'),
+  study: document.getElementById('study'),
+  appHeader: document.getElementById('appHeader'),
+  headerHomeBtn: document.getElementById('headerHomeBtn'),
+  catTabs: document.getElementById('catTabs'),
+  catCount: document.getElementById('catCount'),
+  qCountSlider: document.getElementById('qCountSlider'),
+  qCountVal: document.getElementById('qCountVal'),
   startBtn: document.getElementById('startBtn'),
+  studyBtn: document.getElementById('studyBtn'),
+  studyBackBtn: document.getElementById('studyBackBtn'),
+  studyTitle: document.getElementById('studyTitle'),
+  studySearch: document.getElementById('studySearch'),
+  studyGrid: document.getElementById('studyGrid'),
   progText: document.getElementById('progText'),
   scoreText: document.getElementById('scoreText'),
   progFill: document.getElementById('progFill'),
-  logoCard: document.getElementById('logoCard'),
   logoImg: document.getElementById('logoImg'),
   answeringPane: document.getElementById('answeringPane'),
   feedbackPane: document.getElementById('feedbackPane'),
@@ -326,15 +473,59 @@ const els = {
   resultComment: document.getElementById('resultComment'),
   retryBtn: document.getElementById('retryBtn'),
   homeBtn: document.getElementById('homeBtn'),
+  modalOverlay: document.getElementById('modalOverlay'),
+  modalClose: document.getElementById('modalClose'),
+  modalImg: document.getElementById('modalImg'),
+  modalName: document.getElementById('modalName'),
+  modalCat: document.getElementById('modalCat'),
+  modalOrigin: document.getElementById('modalOrigin'),
 };
 
 function showScreen(name){
-  [els.home, els.quiz, els.result].forEach(s => s.classList.remove('active'));
+  [els.home, els.quiz, els.result, els.study].forEach(s => s.classList.remove('active'));
   els[name].classList.add('active');
+  if(name === 'home'){
+    els.appHeader.classList.remove('visible');
+  } else {
+    els.appHeader.classList.add('visible');
+  }
 }
 
+/* ---------- CATEGORY TABS + SLIDER ---------- */
+function renderCatTabs(){
+  els.catTabs.innerHTML = '';
+  CAT_ORDER.forEach(cat=>{
+    const btn = document.createElement('button');
+    btn.className = 'cat-tab' + (cat === selectedCat ? ' active' : '');
+    btn.textContent = CAT_LABELS[cat];
+    btn.addEventListener('click', ()=>{
+      selectedCat = cat;
+      renderCatTabs();
+      updateCatCount();
+    });
+    els.catTabs.appendChild(btn);
+  });
+}
+function updateCatCount(){
+  const n = poolForCat(selectedCat).length;
+  els.catCount.innerHTML = `<b>${n}</b> 校が対象です`;
+  els.qCountSlider.max = n;
+  if(parseInt(els.qCountSlider.value,10) > n){
+    els.qCountSlider.value = n;
+  }
+  els.qCountVal.textContent = els.qCountSlider.value;
+}
+els.qCountSlider.addEventListener('input', ()=>{
+  els.qCountVal.textContent = els.qCountSlider.value;
+});
+renderCatTabs();
+updateCatCount();
+
+/* ---------- QUIZ ---------- */
 function startQuiz(){
-  order = shuffle(DATA.map((_,i)=>i));
+  const pool = poolForCat(selectedCat);
+  const n = Math.max(1, Math.min(parseInt(els.qCountSlider.value,10) || pool.length, pool.length));
+  order = shuffle(pool).slice(0, n);
   current = 0;
   score = 0;
   showScreen('quiz');
@@ -344,9 +535,9 @@ function startQuiz(){
 function renderChoices(filter){
   const f = (filter||'').trim();
   els.choiceList.innerHTML = '';
-  const items = DATA
-    .map((d,i)=>({name:d.name, idx:i}))
-    .filter(d => !f || d.name.includes(f));
+  const items = SORTED_INDEX
+    .map(idx=>({name:DATA[idx].name, yomi:DATA[idx].yomi||'', idx}))
+    .filter(d => !f || d.name.startsWith(f) || d.yomi.startsWith(f));
   if(items.length === 0){
     const empty = document.createElement('div');
     empty.className = 'choice-empty';
@@ -367,12 +558,11 @@ function loadQuestion(){
   answered = false;
   const qIdx = order[current];
   const q = DATA[qIdx];
-  els.logoImg.src = IMG_BASE + q.path;
+  els.logoImg.src = q.img;
   els.logoImg.alt = 'ロゴクイズ';
-  els.logoCard.setAttribute('data-q', current+1);
-  els.progText.textContent = `問題 ${current+1} / ${DATA.length}`;
+  els.progText.textContent = `問題 ${current+1} / ${order.length}`;
   els.scoreText.textContent = `正解 ${score}`;
-  els.progFill.style.width = ((current)/DATA.length*100) + '%';
+  els.progFill.style.width = ((current)/order.length*100) + '%';
   els.answeringPane.style.display = '';
   els.feedbackPane.style.display = 'none';
   els.searchInput.value = '';
@@ -399,13 +589,13 @@ function selectAnswer(chosenIdx){
   }
   els.originText.textContent = DATA[correctIdx].origin;
   els.scoreText.textContent = `正解 ${score}`;
-  els.progFill.style.width = ((current+1)/DATA.length*100) + '%';
-  els.nextBtn.textContent = (current+1 < DATA.length) ? '次の問題へ' : '結果を見る';
+  els.progFill.style.width = ((current+1)/order.length*100) + '%';
+  els.nextBtn.textContent = (current+1 < order.length) ? '次の問題へ' : '結果を見る';
 }
 
 function nextQuestion(){
   current++;
-  if(current >= DATA.length){
+  if(current >= order.length){
     finishQuiz();
   } else {
     loadQuestion();
@@ -414,23 +604,71 @@ function nextQuestion(){
 
 function finishQuiz(){
   showScreen('result');
-  els.resultScore.innerHTML = `${score}<span>/${DATA.length}</span>`;
-  const pct = score / DATA.length;
+  els.resultScore.innerHTML = `${score}<span>/${order.length}</span>`;
+  const pct = score / order.length;
   let comment;
-  if(pct === 1) comment = '全問正解。もう全国の医学部ロゴを見分けられますね。';
-  else if(pct >= 0.8) comment = 'かなりの正答率。医学部ロゴ通と言っていいレベルです。';
+  if(pct === 1) comment = '全問正解。もう見分けられますね。';
+  else if(pct >= 0.8) comment = 'かなりの正答率。ロゴ通と言っていいレベルです。';
   else if(pct >= 0.5) comment = '半分以上正解。見覚えのあるロゴが増えてきたのでは。';
   else if(pct >= 0.2) comment = 'まだ知らないロゴがたくさんありそうです。もう一度挑戦してみましょう。';
   else comment = '最初は誰でもこんなもの。由来を読みながらもう一周してみてください。';
   els.resultComment.textContent = comment;
 }
 
+/* ---------- STUDY ---------- */
+function openStudy(){
+  studyPool = poolForCat(selectedCat);
+  els.studyTitle.textContent = `学習：${CAT_LABELS[selectedCat]}`;
+  els.studySearch.value = '';
+  showScreen('study');
+  renderStudyGrid('');
+}
+
+function renderStudyGrid(filter){
+  const f = (filter||'').trim();
+  els.studyGrid.innerHTML = '';
+  const items = studyPool
+    .map(idx=>DATA[idx])
+    .filter(d => !f || d.name.startsWith(f) || (d.yomi||'').startsWith(f));
+  if(items.length === 0){
+    const empty = document.createElement('div');
+    empty.className = 'study-empty';
+    empty.textContent = '該当する大学が見つかりません';
+    els.studyGrid.appendChild(empty);
+    return;
+  }
+  items.forEach(d=>{
+    const card = document.createElement('div');
+    card.className = 'study-card';
+    card.innerHTML = `<img src="${d.img}" alt=""><div class="sc-name">${d.name}</div>`;
+    card.addEventListener('click', ()=> openModal(d));
+    els.studyGrid.appendChild(card);
+  });
+}
+
+function openModal(d){
+  els.modalImg.src = d.img;
+  els.modalName.textContent = d.name;
+  els.modalCat.textContent = CAT_LABELS[d.cat] || '';
+  els.modalOrigin.textContent = d.origin;
+  els.modalOverlay.classList.add('active');
+}
+function closeModal(){
+  els.modalOverlay.classList.remove('active');
+}
+
+/* ---------- EVENTS ---------- */
+els.headerHomeBtn.addEventListener('click', ()=> showScreen('home'));
 els.startBtn.addEventListener('click', startQuiz);
+els.studyBtn.addEventListener('click', openStudy);
+els.studyBackBtn.addEventListener('click', ()=> showScreen('home'));
 els.nextBtn.addEventListener('click', nextQuestion);
 els.retryBtn.addEventListener('click', startQuiz);
 els.homeBtn.addEventListener('click', ()=> showScreen('home'));
 els.searchInput.addEventListener('input', (e)=> renderChoices(e.target.value));
+els.studySearch.addEventListener('input', (e)=> renderStudyGrid(e.target.value));
+els.modalClose.addEventListener('click', closeModal);
+els.modalOverlay.addEventListener('click', (e)=>{ if(e.target === els.modalOverlay) closeModal(); });
 </script>
 </body>
 </html>
-
